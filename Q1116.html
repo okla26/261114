@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 操盤擂台｜槓桿 ETF 四回合對決</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070c16; --bg2:#0a1120; --surf:#0d1626; --surf2:#121d33; --line:rgba(126,156,255,.14);
+  --txt:#e9edf7; --mut:#98a2bd; --dim:#5f6a86;
+  --mm:#2dd4a0; --cd:#4cc3ff; --gr:#ff5c7a; --ds:#ffb224;
+  --up:#2dd4a0; --dn:#ff5c7a; --warn:#ffb224; --info:#4cc3ff; --acc:#5b7bff;
+  --spy:#a78bfa; --qqq:#22d3ee; --ewt:#fb923c; --ewy:#e879f9;
+  --sans:'Noto Sans TC',system-ui,-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);overflow-x:hidden;line-height:1.6}
+::selection{background:rgba(91,123,255,.4)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:#26345a;border-radius:6px;border:2px solid var(--bg2)}
+::-webkit-scrollbar-thumb:hover{background:var(--acc)}
+*{scrollbar-width:thin;scrollbar-color:#26345a var(--bg2)}
+.mono{font-family:var(--mono)}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(126,156,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(126,156,255,.05) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 100% 75% at 50% 0%,#000 25%,transparent 78%);
+  mask-image:radial-gradient(ellipse 100% 75% at 50% 0%,#000 25%,transparent 78%)}
+body::after{content:'';position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E")}
+.glow{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;opacity:.5}
+.g1{width:56vw;height:56vw;top:-22vw;left:-14vw;background:radial-gradient(circle,rgba(63,91,255,.34),transparent 65%);animation:drift1 26s ease-in-out infinite alternate}
+.g2{width:44vw;height:44vw;top:30vh;right:-18vw;background:radial-gradient(circle,rgba(45,212,160,.16),transparent 65%);animation:drift2 32s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(9vw,7vh) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-7vw,-9vh) scale(.92)}}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:62px;display:flex;align-items:center;gap:18px;padding:0 clamp(14px,4vw,40px);
+  background:rgba(7,12,22,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s}
+nav.scrolled{border-bottom-color:var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:15px;white-space:nowrap}
+.brand i{width:26px;height:26px;border-radius:8px;background:conic-gradient(from 210deg,var(--mm),var(--cd),var(--acc),var(--gr),var(--ds),var(--mm));display:inline-block;box-shadow:0 0 16px rgba(91,123,255,.5)}
+.nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-link{color:var(--mut);text-decoration:none;font-size:13.5px;padding:7px 12px;border-radius:9px;white-space:nowrap;transition:.2s}
+.nav-link:hover{color:var(--txt);background:rgba(126,156,255,.08)}
+.nav-link.on{color:var(--txt);background:rgba(91,123,255,.18)}
+.nav-cta{font-family:var(--mono);font-size:12.5px;font-weight:600;color:#06110c;background:linear-gradient(120deg,var(--mm),#7ef0c8);border:none;border-radius:10px;padding:9px 14px;cursor:pointer;white-space:nowrap;box-shadow:0 0 18px rgba(45,212,160,.3);transition:.2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 26px rgba(45,212,160,.5)}
+header,main,footer{position:relative;z-index:2}
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding:120px clamp(16px,5vw,64px) 40px;max-width:1280px;margin:0 auto}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--mm);text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-size:clamp(2.5rem,7vw,4.9rem);font-weight:900;line-height:1.12;letter-spacing:.01em}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--mm) 10%,var(--cd) 55%,var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{color:var(--mut);font-size:clamp(1rem,2vw,1.2rem);margin-top:16px;max-width:640px}
+.hero .hook{margin-top:22px;font-family:var(--mono);font-size:clamp(.95rem,1.8vw,1.15rem);color:var(--warn)}
+.hero .hook b{color:var(--mm)}
+.stat-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.schip{border:1px solid var(--line);background:rgba(13,22,38,.7);border-radius:12px;padding:10px 16px;font-size:13px;color:var(--mut)}
+.schip b{display:block;font-family:var(--mono);font-size:19px;color:var(--txt);font-weight:700}
+.fadeup{opacity:0;transform:translateY(22px);animation:fadeup .8s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes fadeup{to{opacity:1;transform:none}}
+.ticker{margin-top:44px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:12px 0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.ticker-track{display:flex;gap:44px;width:max-content;animation:tick 30s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+.tk{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+.tk .sym{font-weight:700}.tk .px{color:var(--mut)}
+.cue{margin-top:34px;color:var(--dim);font-size:12.5px;font-family:var(--mono);animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px)}}
+main{max-width:1280px;margin:0 auto;padding:0 clamp(16px,5vw,64px)}
+section{padding:74px 0;scroll-margin-top:80px}
+.sec-head{margin-bottom:30px}
+.sec-head .no{font-family:var(--mono);color:var(--acc);font-size:12.5px;letter-spacing:.24em}
+.sec-head h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:900;margin-top:6px}
+.sec-head p{color:var(--mut);font-size:14.5px;margin-top:6px;max-width:680px}
+.card{background:linear-gradient(180deg,var(--surf),rgba(13,22,38,.6));border:1px solid var(--line);border-radius:18px;padding:22px;position:relative}
+.card::before{content:'';position:absolute;inset:0 0 auto 0;height:1px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,transparent,rgba(126,156,255,.35),transparent)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0ms)}
+.reveal.in{opacity:1;transform:none}
+.chip{display:inline-flex;align-items:center;font-family:var(--mono);font-size:12px;font-weight:600;border-radius:8px;padding:3px 9px}
+.chip.up{color:var(--up);background:rgba(45,212,160,.12)}
+.chip.dn{color:var(--dn);background:rgba(255,92,122,.12)}
+.chip.ghost{color:var(--mut);background:rgba(126,156,255,.08)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+/* ---- race ---- */
+.race-grid{display:grid;grid-template-columns:1fr 330px;gap:18px}
+.chart-card{padding:18px 18px 14px}
+.chart-top{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:8px}
+.chart-top h3{font-size:15.5px;font-weight:700;flex:1}
+.chart-top h3 span{font-family:var(--mono);color:var(--mm);font-size:13px;margin-left:8px}
+.seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.mode-btn{border:none;background:none;color:var(--mut);font-family:var(--sans);font-size:12.5px;padding:6px 12px;border-radius:8px;cursor:pointer;transition:.2s}
+.mode-btn.on{background:rgba(91,123,255,.22);color:var(--txt)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 6px}
+.leg{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgba(10,17,32,.6);color:var(--txt);font-family:var(--mono);font-size:12px;border-radius:9px;padding:5px 11px;cursor:pointer;transition:.2s}
+.leg:hover{border-color:rgba(126,156,255,.4)}
+.leg.off{opacity:.35;filter:saturate(.2)}
+.leg.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+#chartWrap{position:relative}
+#raceSvg{width:100%;height:auto;display:block}
+#raceSvg text{font-family:var(--mono);font-size:11px;fill:var(--dim)}
+#raceSvg .grid{stroke:rgba(126,156,255,.09)}
+#raceSvg .baseline{stroke:var(--warn);stroke-dasharray:5 5;stroke-opacity:.55}
+#raceSvg .blab{fill:var(--warn);opacity:.85}
+#raceSvg .xlab.on{fill:var(--txt);font-weight:700}
+#raceSvg .series{transition:opacity .3s}
+#raceSvg .series.off{opacity:0}
+#raceSvg .under{fill:none;stroke-width:7;stroke-opacity:.14;stroke-linejoin:round;stroke-linecap:round}
+#raceSvg .main{fill:none;stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+#raceSvg .pt{opacity:0;transition:opacity .4s;stroke:var(--bg);stroke-width:2}
+#raceSvg .pt.on{opacity:1}
+#raceSvg .cursor{stroke:rgba(233,237,247,.3);stroke-dasharray:3 4}
+#raceSvg .cdot{fill:var(--bg);stroke-width:3;transition:opacity .3s}
+#raceSvg .cdot.off{opacity:0}
+#tip{position:absolute;top:0;left:0;pointer-events:none;opacity:0;transition:opacity .15s;background:rgba(9,14,26,.95);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;min-width:158px;box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:5}
+.t-date{font-family:var(--mono);color:var(--dim);font-size:11px;margin-bottom:6px}
+.t-row{display:flex;align-items:center;gap:7px;padding:2px 0;color:var(--mut)}
+.t-row b{margin-left:auto;font-family:var(--mono);color:var(--txt);font-weight:600}
+.player{display:flex;align-items:center;gap:14px;margin-top:12px}
+#playBtn{font-family:var(--mono);font-size:13px;font-weight:700;color:#06110c;background:linear-gradient(120deg,var(--mm),#7ef0c8);border:none;border-radius:11px;padding:10px 18px;cursor:pointer;min-width:96px;box-shadow:0 0 16px rgba(45,212,160,.28);transition:.2s}
+#playBtn:hover{transform:translateY(-1px)}
+.scrub{flex:1;position:relative;display:flex;justify-content:space-between;gap:6px}
+.scrub::before{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:#1b2740;border-radius:2px;transform:translateY(-50%)}
+#scrubFill{position:absolute;left:0;top:50%;height:3px;background:linear-gradient(90deg,var(--acc),var(--mm));border-radius:2px;transform:translateY(-50%);transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.scrub-btn{position:relative;z-index:1;border:1px solid var(--line);background:var(--bg2);color:var(--mut);font-family:var(--mono);font-size:11.5px;border-radius:9px;padding:7px 10px;cursor:pointer;transition:.2s}
+.scrub-btn.on{background:rgba(91,123,255,.25);color:var(--txt);border-color:var(--acc);box-shadow:0 0 12px rgba(91,123,255,.3)}
+.board-card h3{font-size:15.5px;margin-bottom:2px}
+.board-card .b-note{font-size:12px;color:var(--dim);margin-bottom:14px}
+.board-card .b-note b{color:var(--warn);font-family:var(--mono)}
+#board{position:relative;height:288px}
+.b-row{position:absolute;left:0;right:0;height:64px;display:flex;align-items:center;gap:11px;padding:0 13px;border:1px solid var(--line);border-radius:13px;background:rgba(10,17,32,.65);transition:top .55s cubic-bezier(.2,.7,.2,1),border-color .3s}
+.b-row.first{border-color:rgba(45,212,160,.5);box-shadow:0 0 18px rgba(45,212,160,.12)}
+.b-rank{font-family:var(--mono);font-weight:700;font-size:13px;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#1b2740;color:var(--mut);flex:none}
+.b-row.first .b-rank{background:linear-gradient(120deg,var(--mm),#7ef0c8);color:#06110c}
+.b-id{flex:1;min-width:0}
+.b-id b{font-size:13.5px;display:flex;align-items:center;gap:7px}
+.b-id small{display:block;color:var(--dim);font-size:11px}
+.b-val{font-family:var(--mono);font-weight:700;font-size:15.5px}
+.b-cum{font-size:11px}
+.brief{margin-top:18px;display:grid;grid-template-columns:300px 1fr;gap:20px}
+.brief-left .b-date{font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:.14em}
+.brief-left h4{font-size:17px;font-weight:900;margin:5px 0}
+.brief-left p{font-size:13px;color:var(--mut)}
+#briefActs{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.act{display:flex;align-items:center;gap:8px;font-size:12.5px;border:1px solid var(--line);border-radius:11px;padding:9px 12px;background:rgba(10,17,32,.5)}
+.act b{font-size:12.5px;white-space:nowrap}
+.act .why{color:var(--mut);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{font-family:var(--mono);font-size:10.5px;font-weight:700;border-radius:6px;padding:2px 7px;flex:none}
+.badge.adj{color:var(--info);background:rgba(76,195,255,.13)}
+.badge.hold{color:var(--dim);background:rgba(126,156,255,.08)}
+/* ---- agents ---- */
+.agents-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.agent{cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;outline:none}
+.agent:hover,.agent:focus-visible{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 14px 34px rgba(0,0,0,.4),0 0 22px color-mix(in srgb,var(--ac) 22%,transparent)}
+.a-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.medal{font-family:var(--mono);font-weight:700;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#1b2740;color:var(--mut);flex:none}
+.medal.r1{background:linear-gradient(120deg,var(--mm),#7ef0c8);color:#06110c}
+.a-top h3{font-size:16px;font-weight:900}
+.a-style{font-size:11.5px;color:var(--ac)}
+.a-lev{margin-left:auto;font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:7px;padding:3px 7px;white-space:nowrap}
+.a-val{font-size:25px;font-weight:700;letter-spacing:-.01em}
+.a-chips{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 12px}
+.spark{width:100%;height:36px;display:block;margin-bottom:12px}
+.spark polyline{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.a-quote{font-size:13px;color:var(--mut);border-left:3px solid var(--ac);padding-left:11px;min-height:42px}
+.a-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--dim)}
+.a-open{color:var(--ac);font-weight:700;font-size:12px}
+/* ---- events ---- */
+.events{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;position:relative;padding-top:30px}
+.events::before{content:'';position:absolute;top:9px;left:5%;right:5%;height:2px;background:linear-gradient(90deg,var(--dn),var(--warn),var(--up),var(--dn),var(--dn));opacity:.45;border-radius:2px}
+.event{position:relative;padding:16px;cursor:default}
+.event::before{content:'';position:absolute;top:-27px;left:18px;width:12px;height:12px;border-radius:50%;background:var(--tone);box-shadow:0 0 14px var(--tone)}
+.event[data-round]{cursor:pointer}
+.event[data-round]:hover{border-color:var(--tone);transform:translateY(-3px)}
+.event .e-date{font-family:var(--mono);font-size:11.5px;color:var(--tone);font-weight:700;letter-spacing:.08em}
+.event h4{font-size:14.5px;font-weight:900;margin:6px 0}
+.event p{font-size:12.5px;color:var(--mut);min-height:58px}
+.e-moves{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.e-moves .chip{font-size:10.5px;padding:2px 7px}
+.e-link{display:block;margin-top:10px;font-size:11px;color:var(--acc);font-family:var(--mono)}
+/* ---- lab ---- */
+.lab-grid{display:grid;grid-template-columns:320px 1fr;gap:18px}
+.ctrl h3,.labout h3{font-size:15.5px;margin-bottom:16px}
+.ctrl-row{margin-bottom:20px}
+.ctrl-row label{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-bottom:9px}
+.ctrl-row label output{font-family:var(--mono);font-weight:700;color:var(--mm)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:4px;background:#1b2740;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;background:#fff;border:4px solid var(--acc);box-shadow:0 0 12px rgba(91,123,255,.55);cursor:grab}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:#fff;border:4px solid var(--acc);box-shadow:0 0 12px rgba(91,123,255,.55);cursor:grab}
+input[type=range]:disabled{opacity:.3;cursor:not-allowed}
+.path-chips{display:flex;flex-wrap:wrap;gap:7px}
+.pchip{border:1px solid var(--line);background:var(--bg2);color:var(--mut);font-family:var(--mono);font-size:12px;border-radius:9px;padding:7px 12px;cursor:pointer;transition:.2s}
+.pchip.on{color:var(--txt);border-color:var(--acc);background:rgba(91,123,255,.2)}
+.pchip:hover{border-color:rgba(126,156,255,.45)}
+#labReset{width:100%;border:1px solid var(--line);background:none;color:var(--mut);font-family:var(--mono);font-size:12.5px;border-radius:10px;padding:10px;cursor:pointer;transition:.2s}
+#labReset:hover{color:var(--txt);border-color:var(--acc)}
+.formula{margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-top:12px}
+#labSvg{width:100%;height:auto;display:block}
+#labSvg text{font-family:var(--mono);font-size:11px;fill:var(--dim)}
+#labSvg .grid{stroke:rgba(126,156,255,.09)}
+#labSvg .zero{stroke:rgba(233,237,247,.35);stroke-dasharray:4 4}
+.lab-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:14px}
+.lstat{border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:rgba(10,17,32,.5)}
+.lstat small{display:block;font-size:10.5px;color:var(--dim);margin-bottom:3px}
+.lstat b{font-family:var(--mono);font-size:15px;font-weight:700}
+.daychips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;align-items:center}
+.daychips .lbl{font-size:11px;color:var(--dim);font-family:var(--mono)}
+.daychip{font-family:var(--mono);font-size:11px;font-weight:600;border-radius:7px;padding:3px 8px}
+.daychip.up{color:var(--up);background:rgba(45,212,160,.1)}
+.daychip.dn{color:var(--dn);background:rgba(255,92,122,.1)}
+.zerobadge{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--dn);border:1px solid rgba(255,92,122,.5);border-radius:9px;padding:5px 12px;background:rgba(255,92,122,.1)}
+/* ---- insights ---- */
+.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ins h4{font-size:16px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+.ins h4 i{width:10px;height:10px;border-radius:3px;background:var(--ic);box-shadow:0 0 10px var(--ic);flex:none}
+.ins p{font-size:13px;color:var(--mut)}
+.ins .viz{margin-top:16px}
+.bar-row{display:flex;align-items:center;gap:9px;font-size:11.5px;margin-bottom:8px}
+.bar-row .bl{width:88px;color:var(--mut);font-family:var(--mono);flex:none}
+.bar-track{flex:1;height:12px;background:#141f38;border-radius:6px;overflow:hidden}
+.bar-track i{display:block;height:100%;border-radius:6px}
+.bar-row .bv{font-family:var(--mono);font-weight:700;width:62px;text-align:right;flex:none}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.flow span{border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:11.5px;background:rgba(10,17,32,.6);font-family:var(--mono)}
+.flow b{color:var(--warn);font-family:var(--mono)}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:36px clamp(16px,5vw,64px) 46px;position:relative;z-index:2}
+.foot-in{max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
+.foot-in p{font-size:12px;color:var(--dim)}
+.next{display:flex;flex-wrap:wrap;gap:8px}
+.next span{font-family:var(--mono);font-size:11.5px;color:var(--info);border:1px solid rgba(76,195,255,.3);border-radius:9px;padding:6px 11px;background:rgba(76,195,255,.07)}
+/* ---- drawer ---- */
+#backdrop{position:fixed;inset:0;background:rgba(4,7,14,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;z-index:70}
+#backdrop.open{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(470px,96vw);background:var(--bg2);border-left:1px solid var(--line);z-index:71;transform:translateX(102%);transition:transform .42s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column}
+#drawer.open{transform:none}
+.dr-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,color-mix(in srgb,var(--ac,#5b7bff) 13%,transparent),transparent)}
+.dr-head .dot{width:13px;height:13px}
+.dr-head h3{font-size:18px;font-weight:900}
+.dr-head small{display:block;color:var(--ac);font-size:12px}
+#drClose{margin-left:auto;border:1px solid var(--line);background:none;color:var(--mut);width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:15px;transition:.2s}
+#drClose:hover{color:var(--txt);border-color:var(--acc)}
+.dr-body{overflow-y:auto;padding:20px 22px;flex:1}
+.dr-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.dr-stat{border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.dr-stat small{display:block;font-size:10px;color:var(--dim)}
+.dr-stat b{font-family:var(--mono);font-size:13.5px}
+.dr-quote{border-left:3px solid var(--ac);padding:6px 13px;font-size:14px;margin-bottom:12px}
+.dr-desc{font-size:13px;color:var(--mut);margin-bottom:8px}
+.dr-edge{font-size:12.5px;margin-bottom:4px}
+.dr-edge b{color:var(--mm)}.dr-weak b{color:var(--warn)}
+.dr-weak{font-size:12.5px;color:var(--mut);margin-bottom:18px}
+.dr-round{border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin-bottom:12px;background:rgba(13,22,38,.5)}
+.dr-rhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.dr-rhead b{font-family:var(--mono);font-size:12.5px}
+.dr-why{font-size:11.5px;color:var(--mut);width:100%;margin-bottom:8px}
+.dr-total{font-size:11px;color:var(--dim);margin-bottom:8px}
+.pos{display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0}
+.p-sym{font-family:var(--mono);font-weight:700;width:38px;flex:none}
+.p-lev{color:var(--warn);font-size:11px;width:26px;flex:none}
+.p-bar{flex:1;height:8px;background:#141f38;border-radius:4px;overflow:hidden}
+.p-bar i{display:block;height:100%;border-radius:4px}
+.p-val{font-size:11.5px;color:var(--mut);width:72px;text-align:right;flex:none}
+.cashdot{background:#3a4a6f}
+@media(max-width:1080px){
+  .race-grid,.lab-grid{grid-template-columns:1fr}
+  .agents-grid{grid-template-columns:1fr 1fr}
+  .events{grid-template-columns:1fr;padding-top:0;padding-left:26px}
+  .events::before{top:0;bottom:0;left:8px;right:auto;width:2px;height:auto;background:linear-gradient(180deg,var(--dn),var(--warn),var(--up),var(--dn),var(--dn))}
+  .event::before{top:18px;left:-24px}
+  .event p{min-height:0}
+  .brief{grid-template-columns:1fr}
+}
+@media(max-width:720px){
+  .brand span{display:none}
+  .nav-cta{padding:8px 10px;font-size:11px}
+  .agents-grid,.ins-grid{grid-template-columns:1fr}
+  #briefActs{grid-template-columns:1fr}
+  .lab-stats{grid-template-columns:repeat(3,1fr)}
+  .player{flex-wrap:wrap}
+  .scrub{width:100%;flex:1 1 100%}
+  .dr-stats{grid-template-columns:1fr 1fr}
+  section{padding:54px 0}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  html{scroll-behavior:auto}
+  .ticker-track{animation:none}
+  .reveal,.fadeup{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div>
+
+<nav id="nav">
+  <div class="brand"><i></i><span>AI 操盤擂台</span></div>
+  <div class="nav-links">
+    <a class="nav-link" href="#race">戰況</a>
+    <a class="nav-link" href="#agents">選手</a>
+    <a class="nav-link" href="#events">事件</a>
+    <a class="nav-link" href="#lab">槓桿實驗室</a>
+    <a class="nav-link" href="#insights">洞察</a>
+  </div>
+  <button class="nav-cta" id="navPlay">▶ 播放戰況</button>
+</nav>
+
+<header class="hero">
+  <div class="kicker fadeup">SIMULATED LEVERAGED ETF ARENA · 2026.11.11 – 11.14</div>
+  <h1 class="fadeup" style="animation-delay:.08s">四個 AI 操盤手，<br>一場<em>槓桿壓力測試</em>。</h1>
+  <p class="sub fadeup" style="animation-delay:.16s">4 個 AI × 4 回合 × SPY／QQQ／EWT／EWY。選舉衝擊、CPI、執行長辭任、升息定價——風暴連發，誰的紀律撐住了？</p>
+  <p class="hook fadeup" style="animation-delay:.24s">四家全數虧損。全場唯一贏家：<b>現金 +0.00%</b></p>
+  <div class="stat-chips fadeup" style="animation-delay:.32s">
+    <div class="schip"><b>4</b>AI 操盤手</div>
+    <div class="schip"><b>4</b>回合・每日結算</div>
+    <div class="schip"><b>2–3x</b>槓桿倍數</div>
+    <div class="schip"><b style="color:var(--mm)">−1.04%</b>冠軍 AI-mm</div>
+    <div class="schip"><b style="color:var(--dn)">0 家</b>獲利</div>
+  </div>
+  <div class="ticker fadeup" style="animation-delay:.4s"><div class="ticker-track" id="ticker"></div></div>
+  <div class="cue fadeup" style="animation-delay:.5s">SCROLL ▾ 播放戰況，看名次如何洗牌</div>
+</header>
+
+<main>
+<!-- ============ 01 戰況 ============ -->
+<section id="race">
+  <div class="sec-head reveal">
+    <div class="no">01 / RACE</div>
+    <h2>戰況：一週名次大洗牌</h2>
+    <p>按 ▶ 逐回合播放，或直接點選回合。AI-gr 靠 3x 亞太一度領先 +7.85%，兩回合全數吐回；AI-mm 靠低曝險逆勢登頂。</p>
+  </div>
+  <div class="race-grid">
+    <div class="card chart-card reveal">
+      <div class="chart-top">
+        <h3>資產曲線<span id="chartDate">R4 · 11/14</span></h3>
+        <div class="seg" role="tablist">
+          <button class="mode-btn on" data-mode="value">總值</button>
+          <button class="mode-btn" data-mode="exp">名目曝險</button>
+          <button class="mode-btn" data-mode="cash">現金占比</button>
+        </div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div id="chartWrap">
+        <svg id="raceSvg" viewBox="0 0 760 380" role="img" aria-label="四 AI 資產曲線"></svg>
+        <div id="tip"></div>
+      </div>
+      <div class="player">
+        <button id="playBtn" aria-pressed="false">▶ 播放</button>
+        <div class="scrub" id="scrub"><div id="scrubFill"></div></div>
+      </div>
+    </div>
+    <div class="card board-card reveal" style="--d:90ms">
+      <h3>即時排名 <span class="mono" id="boardDate" style="color:var(--mm);font-size:13px"></span></h3>
+      <div class="b-note">基準：100% 現金 = <b>10,000</b>（本週無人打敗）</div>
+      <div id="board"></div>
+    </div>
+  </div>
+  <div class="card brief reveal" style="--d:140ms">
+    <div class="brief-left">
+      <div class="b-date" id="briefDate"></div>
+      <h4 id="briefTitle"></h4>
+      <p id="briefDesc"></p>
+    </div>
+    <div id="briefActs"></div>
+  </div>
+</section>
+
+<!-- ============ 02 選手 ============ -->
+<section id="agents">
+  <div class="sec-head reveal">
+    <div class="no">02 / PLAYERS</div>
+    <h2>選手檔案：四種性格，四種結局</h2>
+    <p>點卡片看完整操盤紀錄——每回合的動作、部位與理由。</p>
+  </div>
+  <div class="agents-grid" id="agentsGrid"></div>
+</section>
+
+<!-- ============ 03 事件 ============ -->
+<section id="events">
+  <div class="sec-head reveal">
+    <div class="no">03 / EVENTS</div>
+    <h2>事件時間軸：需求沒壞，壞的是貼現率</h2>
+    <p>台積電營收 +59.7%、設備支出上修——基本面持续確認；殺盤的是利率與治理。點事件連動戰況。</p>
+  </div>
+  <div class="events">
+    <div class="card event reveal" style="--tone:var(--dn);--d:0ms">
+      <div class="e-date">11/03–05</div><h4>政治衝擊</h4>
+      <p>民主黨全拿兩院，AI 監管疑慮引爆拋售。</p>
+      <div class="e-moves"><span class="chip dn">Nasdaq −5.5%</span><span class="chip dn">費半盤中 −11%</span></div>
+    </div>
+    <div class="card event reveal" style="--tone:var(--dn);--d:60ms">
+      <div class="e-date">11/10</div><h4>CPI 超預期</h4>
+      <p>月增 0.4%；12 月升息近完全定價，10 年期殖利率破 5%。</p>
+      <div class="e-moves"><span class="chip dn">10Y &gt; 5%</span><span class="chip dn">升息 ≈100%</span></div>
+    </div>
+    <div class="card event reveal" data-round="1" style="--tone:var(--up);--d:120ms">
+      <div class="e-date">11/11</div><h4>CoreWeave 點火</h4>
+      <p>財報超預期＋上調財測，AI 供應鏈大反彈——本週唯一大漲日。</p>
+      <div class="e-moves"><span class="chip up">QQQ +2.31%</span><span class="chip up">EWT +4.43%</span><span class="chip up">EWY +4.28%</span></div>
+      <span class="e-link">連動戰況 R2 ↗</span>
+    </div>
+    <div class="card event reveal" data-round="2" style="--tone:var(--dn);--d:180ms">
+      <div class="e-date">11/12</div><h4>黃仁勳辭任 NVDA CEO</h4>
+      <p>治理＋國安疑慮，CFO 代理。市場重新定價整條 AI 鏈。</p>
+      <div class="e-moves"><span class="chip dn">NVDA 盤中 −14%</span><span class="chip dn">台股 −2.63%</span></div>
+      <span class="e-link">連動戰況 R3 ↗</span>
+    </div>
+    <div class="card event reveal" data-round="3" style="--tone:var(--dn);--d:240ms">
+      <div class="e-date">11/13</div><h4>利率重槌</h4>
+      <p>PPI 年增 6.5%、10Y 5.16%。Cisco 報喜仍跌 6%——好消息不再被獎勵。</p>
+      <div class="e-moves"><span class="chip dn">費半 −4%</span><span class="chip dn">四檔全跌</span></div>
+      <span class="e-link">連動戰況 R4 ↗</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 槓桿實驗室 ============ -->
+<section id="lab">
+  <div class="sec-head reveal">
+    <div class="no">04 / LEVERAGE LAB</div>
+    <h2>槓桿實驗室：3x 不是跌 3 倍而已</h2>
+    <p>每日重置有路徑損耗。拖曳滑桿、切換路徑，親眼看「天真倍數」與實際結果的差距。</p>
+  </div>
+  <div class="lab-grid">
+    <div class="card ctrl reveal">
+      <h3>控制台</h3>
+      <div class="ctrl-row">
+        <label>槓桿倍數 <output id="levOut">3.0x</output></label>
+        <input type="range" id="levSlider" min="1" max="5" step="0.5" value="3" aria-label="槓桿倍數">
+      </div>
+      <div class="ctrl-row">
+        <label>價格路徑</label>
+        <div class="path-chips" id="pathChips"></div>
+      </div>
+      <div class="ctrl-row">
+        <label>每日振幅（合成路徑） <output id="ampOut">±5%</output></label>
+        <input type="range" id="ampSlider" min="2" max="20" step="1" value="5" disabled aria-label="每日振幅">
+      </div>
+      <button id="labReset">↻ 重置實驗</button>
+      <div class="formula">每日結算：新本金 = 本金 × (1 + 倍數 × 當日報酬)<br>單日歸零門檻：原型跌 1 ÷ 倍數</div>
+    </div>
+    <div class="card labout reveal" style="--d:90ms">
+      <h3 id="labTitle">EWY · 3.0x</h3>
+      <svg id="labSvg" viewBox="0 0 600 300" role="img" aria-label="槓桿路徑模擬"></svg>
+      <div id="zeroBadge"></div>
+      <div class="daychips" id="dayChips"></div>
+      <div class="lab-stats" id="labStats"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 洞察 ============ -->
+<section id="insights">
+  <div class="sec-head reveal">
+    <div class="no">05 / TAKEAWAYS</div>
+    <h2>四個帶得走的結論</h2>
+  </div>
+  <div class="ins-grid">
+    <div class="card ins reveal" style="--ic:var(--gr)">
+      <h4><i></i>路徑損耗是真的</h4>
+      <p>EWY 原型 −2.23%，3x 實際 −7.64%，比「天真 3 倍」多賠 0.97pp。震盪每天都在蝕本。</p>
+      <div class="viz">
+        <div class="bar-row"><span class="bl">天真 3x</span><div class="bar-track"><i style="width:76%;background:#3a4a6f"></i></div><span class="bv" style="color:var(--mut)">−6.68%</span></div>
+        <div class="bar-row"><span class="bl">實際 3x</span><div class="bar-track"><i style="width:88%;background:linear-gradient(90deg,var(--gr),#ff8fa3)"></i></div><span class="bv" style="color:var(--dn)">−7.64%</span></div>
+      </div>
+    </div>
+    <div class="card ins reveal" style="--ic:var(--warn);--d:60ms">
+      <h4><i></i>現金上限＝順週期規則</h4>
+      <p>「現金 ≤50%」在下跌時逼你回補：部位縮水 → 現金占比被動上升 → 超限就得買。AI-mm 在 R4 被規則逼著低點補 SPY。</p>
+      <div class="viz flow"><span>部位縮水</span><b>→</b><span>現金 50.52%</span><b>→</b><span style="color:var(--warn)">被迫買回 SPY</span></div>
+    </div>
+    <div class="card ins reveal" style="--ic:var(--cd);--d:120ms">
+      <h4><i></i>分散是幻覺</h4>
+      <p>QQQ／EWT／EWY 同源於 AI 半導體，帳面四檔其實一注。AI 群占最終名目曝險：</p>
+      <div class="viz">
+        <div class="bar-row"><span class="bl">AI-gr</span><div class="bar-track"><i style="width:100%;background:var(--gr)"></i></div><span class="bv">100%</span></div>
+        <div class="bar-row"><span class="bl">AI-mm</span><div class="bar-track"><i style="width:91%;background:var(--mm)"></i></div><span class="bv">91%</span></div>
+        <div class="bar-row"><span class="bl">AI-cd</span><div class="bar-track"><i style="width:62%;background:var(--cd)"></i></div><span class="bv">62%</span></div>
+        <div class="bar-row"><span class="bl">AI-ds</span><div class="bar-track"><i style="width:54%;background:var(--ds)"></i></div><span class="bv">54%</span></div>
+      </div>
+    </div>
+    <div class="card ins reveal" style="--ic:var(--mm);--d:180ms">
+      <h4><i></i>冠軍是現金</h4>
+      <p>四家全虧，100% 現金穩居 10,000。這四回合比的是<b style="color:var(--txt)">曝險 × 時機</b>，不是選股。</p>
+      <div class="viz"><svg viewBox="0 0 300 96" style="width:100%;height:auto" id="cashViz"></svg></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <p>資料：1115josn.txt・模擬競賽（人工價格）・ended: false 賽事未完<br>本頁為數據視覺化，非投資建議。</p>
+    <div class="next"><span>11/17 NVDA 財報</span><span>11/18–19 Anthropic IPO</span><span>12/8–9 FOMC</span></div>
+  </div>
+</footer>
+
+<div id="backdrop"></div>
+<aside id="drawer" role="dialog" aria-modal="true" aria-label="選手檔案">
+  <div class="dr-head">
+    <span class="dot" id="drDot"></span>
+    <div><h3 id="drName"></h3><small id="drStyle"></small></div>
+    <button id="drClose" aria-label="關閉">✕</button>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+
+<script>
+(()=>{ 'use strict';
+const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const IDS=['ds','cd','gr','mm'];
+const META={
+  mm:{name:'AI-mm',color:'#2dd4a0',style:'紀律觸發型',rank:1,final:9896.29,cum:-1.04,mdd:-3.92,exp:109,lev:'全程 2x',trades:'1 次｜規則強迫',quote:'名次不是策略。',desc:'觸發條件未達就不動；唯一一次交易，是被現金 50% 上限逼出來的 SPY 補倉。',edge:'2x＋半倉現金，把尾部風險鎖在門外。',weak:'91% 名目曝險仍在 AI 群，分散效果有限。'},
+  cd:{name:'AI-cd',color:'#4cc3ff',style:'核心衛星型',rank:2,final:9831.01,cum:-1.69,mdd:-5.59,exp:192,lev:'2–3x',trades:'1 次｜合規 74 元',quote:'不因單純下跌而轉現金。',desc:'資訊最弱、換手最低，穩定度贏過聰明；四回合只為合規減碼 73.96 元。',edge:'買入持有核心＋衛星，不受敘事甩盤。',weak:'最終曝險 192% 全場最高，財報週尾部風險大。'},
+  gr:{name:'AI-gr',color:'#ff5c7a',style:'亞太動量型',rank:3,final:9827.53,cum:-1.72,mdd:-8.88,exp:169,lev:'2–3x',trades:'1 次｜事件減碼',quote:'Nvidia 事件屬短期雜音。',desc:'3x 重押 EWT/EWY，R2 領先 +7.85% 後兩回合全吐回；曾自違 30% 現金下限。',edge:'壓中亞股大反彈，單回合 +7.85% 全場最猛。',weak:'100% 名目曝險同源 AI，回撤 −8.88% 最深。'},
+  ds:{name:'AI-ds',color:'#ffb224',style:'敘事換手型',rank:4,final:9814.86,cum:-1.85,mdd:-3.70,exp:106,lev:'2–3x',trades:'4 次｜全調整',quote:'先前排除 EWT/EWY 導致落後。',desc:'敘事驅動、追名次加碼又砍倉，四回合全調整；回撤最小是用放棄反彈換來的。',edge:'R4 逆勢加 EWT：設計端輪動不改代工需求。',weak:'明示追名次而追高，換手最高、績效墊底。'}
+};
+const ASSET={SPY:{c:'#a78bfa',n:'SPY 標普500'},QQQ:{c:'#22d3ee',n:'QQQ 那斯達克100'},EWT:{c:'#fb923c',n:'EWT 台灣'},EWY:{c:'#e879f9',n:'EWY 韓國'}};
+const R=[
+ {d:'11/11',date:'2026-11-11',title:'初始建倉：四種性格亮相',brief:'CPI 超預期、12 月升息近確定；CoreWeave 財報點火，亞股大反彈前夜。',
+  tot:{ds:10000,cd:10000,gr:10000,mm:10000},exp:{ds:135,cd:195,gr:205,mm:100},csh:{ds:50,cd:25,gr:25,mm:50},
+  act:{ds:['調整','QQQ 超賣反彈；拒買 EWT/EWY'],cd:['調整','四檔分散 2–3x，現金 25%'],gr:['調整','3x 重押亞太半導體'],mm:['調整','2x＋50% 現金，不追高']},
+  pos:{ds:{p:[['QQQ',3,3500],['SPY',2,1500]],c:5000},cd:{p:[['SPY',3,2500],['QQQ',3,2000],['EWT',2,1500],['EWY',2,1500]],c:2500},gr:{p:[['EWT',3,3000],['EWY',3,2500],['QQQ',2,2000]],c:2500},mm:{p:[['QQQ',2,2500],['EWT',2,1500],['EWY',2,1000]],c:5000}}},
+ {d:'11/12',date:'2026-11-12',title:'CoreWeave 點火，亞股大反彈',brief:'EWT +4.43%、EWY +4.28%。高曝險的 AI-gr 單回合 +7.85% 登頂；AI-ds 承認落後追買亞洲。',
+  tot:{ds:10192.47,cd:10413.53,gr:10784.91,mm:10299.82},exp:{ds:191,cd:197,gr:211,mm:103},csh:{ds:21.5,cd:24,gr:23.2,mm:48.5},
+  act:{ds:['調整','落後就追：新增 EWT/EWY'],cd:['不調整','不追價，理由未失效'],gr:['不調整','領先續抱，事件屬雜音'],mm:['不調整','觸發未達，不動']},
+  pos:{ds:{p:[['QQQ',3,3500],['SPY',2,1500],['EWT',2,1800],['EWY',2,1200]],c:2192.47},cd:{p:[['SPY',3,2554.69],['QQQ',3,2097.48],['EWT',2,1633.04],['EWY',2,1628.31]],c:2500.01},gr:{p:[['EWT',3,3399.13],['EWY',3,2820.79],['QQQ',2,2064.99]],c:2500},mm:{p:[['QQQ',2,2581.23],['EWT',2,1633.04],['EWY',2,1085.54]],c:5000.01}}},
+ {d:'11/13',date:'2026-11-13',title:'黃仁勳辭任，治理衝擊',brief:'NVDA 盤中 −14%、收 −4.3%；台股 −2.63%。AI-ds 降槓桿清 EWY，AI-gr 減碼補現金。',
+  tot:{ds:10040.47,cd:10264.20,gr:10305.74,mm:10157.24},exp:{ds:124,cd:195,gr:174,mm:102},csh:{ds:38.3,cd:25.1,gr:35.3,mm:49.2},
+  act:{ds:['調整','QQQ 降 2x、清光 EWY'],cd:['調整','僅合規減碼 74 元'],gr:['調整','減碼補現金到 35%'],mm:['不調整','需求確認、利率未解']},
+  pos:{ds:{p:[['SPY',2,2800],['QQQ',2,2200],['EWT',2,1200]],c:3840.47},cd:{p:[['SPY',3,2500],['QQQ',3,2094.57],['EWT',2,1543.83],['EWY',2,1551.82]],c:2573.98},gr:{p:[['EWT',3,2500],['EWY',3,2100],['QQQ',2,2063.08]],c:3642.66},mm:{p:[['QQQ',2,2578.84],['EWT',2,1543.83],['EWY',2,1034.55]],c:5000.02}}},
+ {d:'11/14',date:'2026-11-14',title:'利率重槌，全面收跌',brief:'PPI 年增 6.5%、10Y 5.16%、費半 −4%。AI-mm 現金超限被迫補 SPY，靠低曝險逆勢登頂。',
+  tot:{ds:9814.86,cd:9831.01,gr:9827.53,mm:9896.29},exp:{ds:106,cd:192,gr:169,mm:109},csh:{ds:47,cd:26.2,gr:37.1,mm:45.5},
+  act:{ds:['調整','砍 QQQ/SPY，逆勢加 EWT'],cd:['不調整','理由未失效，續抱'],gr:['不調整','回撤未達 30% 門檻'],mm:['調整','現金 50.52% 超限→補 SPY']},
+  pos:{ds:{p:[['SPY',2,2400],['QQQ',2,1200],['EWT',2,1600]],c:4614.86},cd:{p:[['SPY',3,2396.61],['QQQ',3,1940.23],['EWT',2,1491.94],['EWY',2,1428.26]],c:2573.97},gr:{p:[['EWT',3,2373.95],['EWY',3,1849.19],['QQQ',2,1961.73]],c:3642.66},mm:{p:[['QQQ',2,2452.15],['EWT',2,1491.94],['EWY',2,952.18],['SPY',2,500]],c:4500.02}}}
+];
+const fmtM=v=>v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtP=(v,d=2)=>(v>0?'+':'')+v.toFixed(d)+'%';
+
+/* ---------- ticker ---------- */
+const TK=[['SPY',751.15,-0.41,'#a78bfa'],['QQQ',675.11,-0.92,'#22d3ee'],['EWT',95.94,-0.12,'#fb923c'],['EWY',140.13,-2.23,'#e879f9'],['CASH 現金',10000,0,'#2dd4a0']];
+const tkHTML=TK.map(([s,p,c,col])=>`<span class="tk"><span class="sym" style="color:${col}">${s}</span><span class="px">${fmtM(p)}</span><span style="color:${c>=0?'var(--up)':'var(--dn)'}">${c>=0?'▲':'▼'} ${fmtP(c)}</span></span>`).join('');
+$('#ticker').innerHTML=tkHTML+tkHTML;
+
+/* ---------- race chart ---------- */
+const CW=760,CH=380,PL=64,PR=26,PT=30,PB=42;
+const X=i=>PL+i*(CW-PL-PR)/3;
+const MODES={
+ value:{min:9750,max:10900,ticks:[9800,10000,10200,10400,10600,10800],base:10000,baseTxt:'現金基準 10,000',get:(r,id)=>r.tot[id],fmt:v=>Math.round(v).toLocaleString('en-US')},
+ exp:{min:90,max:220,ticks:[100,125,150,175,200],base:100,baseTxt:'1x = 100%',get:(r,id)=>r.exp[id],fmt:v=>v.toFixed(0)+'%'},
+ cash:{min:15,max:55,ticks:[20,30,40,50],base:50,baseTxt:'上限 50%',get:(r,id)=>r.csh[id],fmt:v=>v.toFixed(1)+'%'}
+};
+let mode='value',current=3,visible=new Set(IDS),cursorX=X(3),dotY={},raf=null,playing=false,ptimer=null;
+let clipRect,cursorL,cdots={};
+const svg=$('#raceSvg');
+const Y=v=>{const m=MODES[mode];return PT+(m.max-v)/(m.max-m.min)*(CH-PT-PB);};
+
+function buildChart(){
+ const m=MODES[mode];let s=`<defs><clipPath id="raceClip"><rect id="raceClipRect" x="0" y="0" width="${cursorX+8}" height="${CH}"/></clipPath></defs>`;
+ m.ticks.forEach(t=>{const y=Y(t);s+=`<line class="grid" x1="${PL}" x2="${CW-PR}" y1="${y}" y2="${y}"/><text x="${PL-10}" y="${y+4}" text-anchor="end">${m.fmt(t)}</text>`;});
+ const by=Y(m.base);
+ s+=`<line class="baseline" x1="${PL}" x2="${CW-PR}" y1="${by}" y2="${by}"/><text class="blab" x="${CW-PR}" y="${by-8}" text-anchor="end">${m.baseTxt}</text>`;
+ R.forEach((r,i)=>{s+=`<text class="xlab ${i===current?'on':''}" x="${X(i)}" y="${CH-14}" text-anchor="middle">R${i+1} · ${r.d}</text>`;});
+ s+='<g clip-path="url(#raceClip)">';
+ IDS.forEach(id=>{const pts=R.map((r,i)=>`${X(i)},${Y(m.get(r,id))}`).join(' ');
+  s+=`<g class="series ${visible.has(id)?'':'off'}" data-id="${id}"><polyline class="under" points="${pts}" style="stroke:${META[id].color}"/><polyline class="main" points="${pts}" style="stroke:${META[id].color}"/></g>`;});
+ s+='</g>';
+ IDS.forEach(id=>R.forEach((r,i)=>{s+=`<circle class="pt ${i<=current&&visible.has(id)?'on':''}" data-id="${id}" data-i="${i}" cx="${X(i)}" cy="${Y(m.get(r,id))}" r="4.5" style="fill:${META[id].color}"/>`;}));
+ s+=`<line id="cursorL" class="cursor" x1="${cursorX}" x2="${cursorX}" y1="${PT-6}" y2="${CH-PB+6}"/>`;
+ IDS.forEach(id=>{s+=`<circle id="cd-${id}" class="cdot ${visible.has(id)?'':'off'}" cx="${cursorX}" cy="${dotY[id]??Y(m.get(R[current],id))}" r="6.5" style="stroke:${META[id].color}"/>`;});
+ svg.innerHTML=s;
+ clipRect=$('#raceClipRect');cursorL=$('#cursorL');cdots={};IDS.forEach(id=>cdots[id]=$('#cd-'+id));
+}
+function syncPoints(){
+ $$('.pt',svg).forEach(p=>p.classList.toggle('on',+p.dataset.i<=current&&visible.has(p.dataset.id)));
+ $$('.xlab',svg).forEach((t,i)=>t.classList.toggle('on',i===current));
+ $('#chartDate').textContent=`R${current+1} · ${R[current].d}`;
+}
+function moveCursor(i,anim=true){
+ const m=MODES[mode],tx=X(i),fx=cursorX,fy={},ty={};
+ IDS.forEach(id=>{fy[id]=dotY[id]??Y(m.get(R[current],id));ty[id]=Y(m.get(R[i],id));});
+ cancelAnimationFrame(raf);
+ const apply=(cx,cy)=>{cursorX=cx;dotY=cy;clipRect.setAttribute('width',Math.max(0,cx+8));cursorL.setAttribute('x1',cx);cursorL.setAttribute('x2',cx);IDS.forEach(id=>{cdots[id].setAttribute('cx',cx);cdots[id].setAttribute('cy',cy[id]);});};
+ if(!anim||REDUCED){apply(tx,ty);return;}
+ const t0=performance.now(),D=560;
+ const step=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3),cy={};IDS.forEach(id=>cy[id]=fy[id]+(ty[id]-fy[id])*e);apply(fx+(tx-fx)*e,cy);if(k<1)raf=requestAnimationFrame(step);};
+ raf=requestAnimationFrame(step);
+}
+/* board */
+const rows={};
+IDS.forEach(id=>{const m=META[id];const el=document.createElement('div');el.className='b-row';
+ el.innerHTML=`<span class="b-rank"></span><div class="b-id"><b><span class="dot" style="background:${m.color}"></span>${m.name}</b><small>${m.style}</small></div><span class="b-val mono"></span><span class="b-cum chip"></span>`;
+ $('#board').appendChild(el);rows[id]=el;});
+function renderBoard(){
+ const r=R[current];
+ [...IDS].sort((a,b)=>r.tot[b]-r.tot[a]).forEach((id,rank)=>{
+  const row=rows[id];row.style.top=rank*72+'px';row.classList.toggle('first',rank===0);
+  row.querySelector('.b-rank').textContent=rank+1;
+  row.querySelector('.b-val').textContent=fmtM(r.tot[id]);
+  const cum=(r.tot[id]/10000-1)*100,chip=row.querySelector('.b-cum');
+  chip.textContent=fmtP(cum);chip.className='b-cum chip '+(cum>=0?'up':'dn');});
+ $('#boardDate').textContent=r.d;
+}
+function renderBrief(){
+ const r=R[current];
+ $('#briefDate').textContent=`ROUND ${current+1} · ${r.date}`;
+ $('#briefTitle').textContent=r.title;$('#briefDesc').textContent=r.brief;
+ $('#briefActs').innerHTML=IDS.map(id=>{const a=r.act[id];return `<div class="act"><span class="dot" style="background:${META[id].color}"></span><b>${META[id].name}</b><span class="badge ${a[0]==='調整'?'adj':'hold'}">${a[0]}</span><span class="why" title="${a[1]}">${a[1]}</span></div>`;}).join('');
+}
+/* scrubber + play */
+R.forEach((r,i)=>{const b=document.createElement('button');b.className='scrub-btn';b.textContent=`R${i+1} ${r.d}`;b.onclick=()=>{stopPlay();setRound(i);};$('#scrub').appendChild(b);});
+function syncScrub(){$$('.scrub-btn').forEach((b,i)=>b.classList.toggle('on',i===current));$('#scrubFill').style.width=(current/3*100)+'%';}
+function setPlayBtn(){$('#playBtn').innerHTML=playing?'❚❚ 暫停':(current>=3?'↻ 重播':'▶ 播放');$('#playBtn').setAttribute('aria-pressed',playing);}
+function setRound(i,anim=true){current=i;moveCursor(i,anim);syncPoints();renderBoard();renderBrief();syncScrub();setPlayBtn();}
+function stopPlay(){playing=false;clearTimeout(ptimer);setPlayBtn();}
+function tick(){ptimer=setTimeout(()=>{if(current<3){setRound(current+1);tick();}else stopPlay();},1700);}
+function startPlay(){if(current>=3)setRound(0,false);playing=true;setPlayBtn();tick();}
+$('#playBtn').onclick=()=>playing?stopPlay():startPlay();
+$('#navPlay').onclick=()=>{$('#race').scrollIntoView({behavior:REDUCED?'auto':'smooth'});stopPlay();startPlay();};
+addEventListener('keydown',e=>{
+ if($('#drawer').classList.contains('open')||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+ if(e.key==='ArrowRight'){stopPlay();setRound(Math.min(3,current+1));}
+ if(e.key==='ArrowLeft'){stopPlay();setRound(Math.max(0,current-1));}
+ if(e.key==='Escape')closeDrawer();
+});
+/* legend */
+IDS.forEach(id=>{const b=document.createElement('button');b.className='leg';b.dataset.id=id;b.setAttribute('aria-pressed','true');
+ b.innerHTML=`<span class="dot" style="background:${META[id].color}"></span>${META[id].name}`;
+ b.onclick=()=>{
+  if(visible.has(id)&&visible.size===1){b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),400);return;}
+  visible.has(id)?visible.delete(id):visible.add(id);
+  b.classList.toggle('off',!visible.has(id));b.setAttribute('aria-pressed',visible.has(id));
+  $$('.series',svg).forEach(g=>g.classList.toggle('off',!visible.has(g.dataset.id)));
+  IDS.forEach(x=>cdots[x].classList.toggle('off',!visible.has(x)));syncPoints();};
+ $('#legend').appendChild(b);});
+/* mode */
+$$('.mode-btn').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;$$('.mode-btn').forEach(x=>x.classList.toggle('on',x===b));dotY={};buildChart();syncPoints();moveCursor(current,false);});
+/* tooltip */
+const wrap=$('#chartWrap'),tip=$('#tip');
+wrap.addEventListener('pointermove',e=>{
+ const rect=svg.getBoundingClientRect(),px=(e.clientX-rect.left)/rect.width*CW;
+ const i=Math.max(0,Math.min(3,Math.round((px-PL)/((CW-PL-PR)/3))));
+ const m=MODES[mode],r=R[i],list=[...visible].sort((a,b)=>m.get(r,b)-m.get(r,a));
+ tip.innerHTML=`<div class="t-date">R${i+1} · ${r.d}</div>`+list.map(id=>`<div class="t-row"><span class="dot" style="background:${META[id].color}"></span>${META[id].name}<b>${m.fmt(m.get(r,id))}</b></div>`).join('');
+ tip.style.opacity=1;
+ const wr=wrap.getBoundingClientRect(),tw=tip.offsetWidth,th=tip.offsetHeight;
+ let lx=e.clientX-wr.left+16,ly=e.clientY-wr.top-th-12;
+ lx=Math.max(8,Math.min(wr.width-tw-8,lx));ly=Math.max(8,Math.min(wr.height-th-8,ly));
+ tip.style.transform=`translate(${lx}px,${ly}px)`;
+});
+wrap.addEventListener('pointerleave',()=>tip.style.opacity=0);
+
+/* ---------- agent cards ---------- */
+function spark(id){const vals=R.map(r=>r.tot[id]),mn=Math.min(...vals),mx=Math.max(...vals);
+ const pts=vals.map((v,i)=>`${8+i*84/3},${31-(v-mn)/(mx-mn||1)*25}`).join(' ');
+ return `<svg class="spark" viewBox="0 0 100 36" preserveAspectRatio="none"><polyline points="${pts}" style="stroke:${META[id].color}"/></svg>`;}
+$('#agentsGrid').innerHTML=['mm','cd','gr','ds'].map((id,i)=>{const m=META[id];return `
+ <article class="card agent reveal" data-id="${id}" role="button" tabindex="0" aria-label="查看 ${m.name} 檔案" style="--ac:${m.color};--d:${i*70}ms">
+  <div class="a-top"><span class="medal r${m.rank}">${m.rank}</span><div><h3>${m.name}</h3><span class="a-style">${m.style}</span></div><span class="a-lev mono">${m.lev}</span></div>
+  <div class="a-val mono">${fmtM(m.final)}</div>
+  <div class="a-chips"><span class="chip dn">${fmtP(m.cum)}</span><span class="chip ghost">回撤 ${fmtP(m.mdd)}</span><span class="chip ghost">曝險 ${m.exp}%</span></div>
+  ${spark(id)}
+  <p class="a-quote">「${m.quote}」</p>
+  <div class="a-foot"><span>${m.trades}</span><span class="a-open">查看檔案 →</span></div>
+ </article>`;}).join('');
+$$('.agent').forEach(c=>{const open=()=>openAgent(c.dataset.id);c.addEventListener('click',open);c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});});
+
+/* ---------- drawer ---------- */
+let lastFocus=null;
+function openAgent(id){
+ const m=META[id];stopPlay();lastFocus=document.activeElement;
+ $('#drawer').style.setProperty('--ac',m.color);
+ $('#drDot').style.background=m.color;$('#drName').textContent=m.name;$('#drStyle').textContent=`${m.style} · 最終排名第 ${m.rank}`;
+ const roundsHTML=R.map((r,i)=>{const p=r.pos[id],tot=r.tot[id],a=r.act[id];
+  const posRows=p.p.map(([s,l,v])=>`<div class="pos"><span class="dot" style="background:${ASSET[s].c}"></span><span class="p-sym">${s}</span><span class="p-lev mono">×${l}</span><div class="p-bar"><i style="width:${(v/tot*100).toFixed(1)}%;background:${ASSET[s].c}"></i></div><span class="p-val mono">${fmtM(v)}</span></div>`).join('');
+  return `<div class="dr-round"><div class="dr-rhead"><b>R${i+1} · ${r.d}</b><span class="badge ${a[0]==='調整'?'adj':'hold'}">${a[0]}</span><span class="dr-why">${a[1]}</span></div>
+   <div class="dr-total mono">總值 ${fmtM(tot)}</div>${posRows}
+   <div class="pos"><span class="dot cashdot"></span><span class="p-sym">現金</span><span class="p-lev mono">—</span><div class="p-bar"><i style="width:${(p.c/tot*100).toFixed(1)}%;background:#3a4a6f"></i></div><span class="p-val mono">${fmtM(p.c)}</span></div></div>`;}).join('');
+ $('#drBody').innerHTML=`
+  <div class="dr-stats">
+   <div class="dr-stat"><small>最終總值</small><b>${fmtM(m.final)}</b></div>
+   <div class="dr-stat"><small>累計報酬</small><b style="color:var(--dn)">${fmtP(m.cum)}</b></div>
+   <div class="dr-stat"><small>峰值回撤</small><b style="color:var(--warn)">${fmtP(m.mdd)}</b></div>
+   <div class="dr-stat"><small>最終曝險</small><b>${m.exp}%</b></div>
+  </div>
+  <div class="dr-quote">「${m.quote}」</div>
+  <p class="dr-desc">${m.desc}</p>
+  <p class="dr-edge"><b>優勢</b> ${m.edge}</p>
+  <p class="dr-weak"><b>弱點</b> ${m.weak}</p>
+  ${roundsHTML}`;
+ $('#backdrop').classList.add('open');$('#drawer').classList.add('open');
+ document.body.style.overflow='hidden';$('#drClose').focus();
+}
+function closeDrawer(){if(!$('#drawer').classList.contains('open'))return;
+ $('#backdrop').classList.remove('open');$('#drawer').classList.remove('open');
+ document.body.style.overflow='';if(lastFocus)lastFocus.focus();}
+$('#drClose').onclick=closeDrawer;$('#backdrop').onclick=closeDrawer;
+
+/* ---------- events cross-link ---------- */
+$$('.event[data-round]').forEach(el=>el.addEventListener('click',()=>{stopPlay();setRound(+el.dataset.round);$('#race').scrollIntoView({behavior:REDUCED?'auto':'smooth'});}));
+
+/* ---------- leverage lab ---------- */
+const PATHS={
+ SPY:{n:'SPY',d:[0.729,0.251,-1.379]},QQQ:{n:'QQQ',d:[1.625,-0.046,-2.456]},
+ EWT:{n:'EWT',d:[4.435,-2.731,-1.681]},EWY:{n:'EWY',d:[4.277,-2.349,-3.981]},
+ osc:{n:'震盪',syn:true},down:{n:'單邊下跌',syn:true}};
+let lab={lev:3,path:'EWY',amp:5};
+const LW=600,LH=300,LPL=56,LPR=76,LPT=24,LPB=34;
+function labDays(){const p=PATHS[lab.path];if(!p.syn)return p.d;const a=lab.amp;return lab.path==='osc'?[a,-a,a,-a,a,-a]:[-a,-a,-a,-a];}
+function niceTicks(mn,mx,n=4){const span=mx-mn||1,s0=span/n,mag=Math.pow(10,Math.floor(Math.log10(s0))),norm=s0/mag,step=(norm>=5?5:norm>=2?2:1)*mag,out=[];for(let v=Math.ceil(mn/step)*step;v<=mx+1e-9;v+=step)out.push(+v.toFixed(6));return out;}
+function fillSlider(el){const p=(el.value-el.min)/(el.max-el.min)*100;el.style.background=`linear-gradient(90deg,var(--acc) ${p}%,#1b2740 ${p}%)`;}
+function renderLab(){
+ const days=labDays(),n=days.length;
+ let u=1,l=1,zero=false;const us=[0],ls=[0];
+ days.forEach(r=>{u*=1+r/100;l=zero?0:Math.max(0,l*(1+lab.lev*r/100));if(l<=1e-9){zero=true;l=0;}us.push((u-1)*100);ls.push((l-1)*100);});
+ const fU=(u-1)*100,fL=(l-1)*100,naive=lab.lev*fU,decay=fL-naive;
+ const all=[...us,...ls,0];let mn=Math.min(...all),mx=Math.max(...all);const pad=(mx-mn||1)*.18;mn-=pad;mx+=pad;
+ const lx=i=>LPL+i*(LW-LPL-LPR)/n, ly=v=>LPT+(mx-v)/(mx-mn)*(LH-LPT-LPB);
+ let s='';
+ niceTicks(mn,mx,4).forEach(t=>{s+=`<line class="grid" x1="${LPL}" x2="${LW-LPR}" y1="${ly(t)}" y2="${ly(t)}"/><text x="${LPL-8}" y="${ly(t)+4}" text-anchor="end">${t.toFixed(0)}%</text>`;});
+ s+=`<line class="zero" x1="${LPL}" x2="${LW-LPR}" y1="${ly(0)}" y2="${ly(0)}"/>`;
+ const upPts=us.map((v,i)=>`${lx(i)},${ly(v)}`).join(' '), lvPts=ls.map((v,i)=>`${lx(i)},${ly(v)}`).join(' ');
+ const lc=fL>=0?'#2dd4a0':'#ff5c7a';
+ s+=`<polyline points="${upPts}" fill="none" stroke="#98a2bd" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"/>`;
+ s+=`<polyline points="${lvPts}" fill="none" stroke="${lc}" stroke-width="7" stroke-opacity=".15" stroke-linejoin="round"/><polyline points="${lvPts}" fill="none" stroke="${lc}" stroke-width="3" stroke-linejoin="round"/>`;
+ const eyU=Math.max(LPT+4,Math.min(LH-LPB-4,ly(fU))),eyL=Math.max(LPT+4,Math.min(LH-LPB-4,ly(fL)));
+ s+=`<circle cx="${lx(n)}" cy="${ly(fU)}" r="4" fill="#98a2bd"/><text x="${lx(n)+9}" y="${eyU+4}" fill="#98a2bd">原型 ${fmtP(fU,1)}</text>`;
+ s+=`<circle cx="${lx(n)}" cy="${ly(fL)}" r="5" fill="${lc}"/><text x="${lx(n)+9}" y="${eyL+18}" fill="${lc}" font-weight="700">${lab.lev}x ${fmtP(fL,1)}</text>`;
+ days.forEach((d,i)=>{s+=`<text x="${lx(i+1)}" y="${LH-12}" text-anchor="middle">D${i+1}</text>`;});
+ $('#labSvg').innerHTML=s;
+ $('#labTitle').textContent=`${PATHS[lab.path].n} · ${lab.lev.toFixed(1)}x`;
+ $('#zeroBadge').innerHTML=zero?'<span class="zerobadge">⚠ 本金已歸零 — 單日跌幅觸及 1÷倍數 門檻</span>':'';
+ $('#dayChips').innerHTML='<span class="lbl">每日原型：</span>'+days.map(d=>`<span class="daychip ${d>=0?'up':'dn'}">${fmtP(d,2)}</span>`).join('');
+ $('#labStats').innerHTML=`
+  <div class="lstat"><small>原型累計</small><b style="color:${fU>=0?'var(--up)':'var(--dn)'}">${fmtP(fU)}</b></div>
+  <div class="lstat"><small>槓桿實際</small><b style="color:${fL>=0?'var(--up)':'var(--dn)'}">${fmtP(fL)}</b></div>
+  <div class="lstat"><small>天真倍數</small><b style="color:var(--mut)">${fmtP(naive)}</b></div>
+  <div class="lstat"><small>路徑損耗</small><b style="color:${decay<0?'var(--warn)':'var(--up)'}">${fmtP(decay)}</b></div>
+  <div class="lstat"><small>單日歸零門檻</small><b style="color:var(--info)">−${(100/lab.lev).toFixed(1)}%</b></div>`;
+ $('#levOut').textContent=lab.lev.toFixed(1)+'x';$('#ampOut').textContent='±'+lab.amp+'%';
+ $('#ampSlider').disabled=!PATHS[lab.path].syn;
+ $$('.pchip').forEach(c=>c.classList.toggle('on',c.dataset.path===lab.path));
+ fillSlider($('#levSlider'));fillSlider($('#ampSlider'));
+}
+Object.keys(PATHS).forEach(k=>{const b=document.createElement('button');b.className='pchip';b.dataset.path=k;b.textContent=PATHS[k].n;
+ b.onclick=()=>{lab.path=k;renderLab();};$('#pathChips').appendChild(b);});
+$('#levSlider').addEventListener('input',e=>{lab.lev=+e.target.value;renderLab();});
+$('#ampSlider').addEventListener('input',e=>{lab.amp=+e.target.value;renderLab();});
+$('#labReset').onclick=()=>{lab={lev:3,path:'EWY',amp:5};$('#levSlider').value=3;$('#ampSlider').value=5;renderLab();};
+
+/* ---------- cash king viz ---------- */
+(()=>{const vals=[['mm',9896.29,'#2dd4a0'],['cd',9831.01,'#4cc3ff'],['gr',9827.53,'#ff5c7a'],['ds',9814.86,'#ffb224']];
+ const y=v=>14+(10050-v)/(10050-9780)*68;let s=`<line x1="10" x2="290" y1="${y(10000)}" y2="${y(10000)}" stroke="#2dd4a0" stroke-width="2" stroke-dasharray="6 4"/><text x="290" y="${y(10000)-6}" text-anchor="end" fill="#2dd4a0" font-size="10" font-family="JetBrains Mono,monospace">現金 10,000</text>`;
+ vals.forEach(([id,v,c],i)=>{const x=40+i*70;s+=`<circle cx="${x}" cy="${y(v)}" r="5" fill="${c}"/><text x="${x}" y="${y(v)+17}" text-anchor="middle" fill="#98a2bd" font-size="9.5" font-family="JetBrains Mono,monospace">${id}</text>`;});
+ $('#cashViz').innerHTML=s;})();
+
+/* ---------- reveal / spy / nav ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+$$('.reveal').forEach(el=>io.observe(el));
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)$$('.nav-link').forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id));}),{rootMargin:'-40% 0px -55% 0px'});
+$$('main section[id]').forEach(s=>spy.observe(s));
+addEventListener('scroll',()=>$('#nav').classList.toggle('scrolled',scrollY>10),{passive:true});
+
+/* ---------- init ---------- */
+buildChart();setRound(3,false);renderLab();
+})();
+</script>
+</body>
+</html>
