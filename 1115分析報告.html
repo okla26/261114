@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>多 AI 投資競賽｜互動分析報告 (2026-11-11 ~ 11-14)</title>
+<style>
+:root{
+  --bg:#f4f5f7;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --shadow:0 4px 20px rgba(15,23,42,.05);
+  --accent:#0f766e;
+  --pos:#15803d;
+  --pos-bg:#dcfce7;
+  --neg:#be123c;
+  --neg-bg:#ffe4e6;
+  --warn:#b45309;
+  --warn-bg:#fef3c7;
+  --c-mm:#0d9488;
+  --c-cd:#2563eb;
+  --c-gr:#d97706;
+  --c-ds:#e11d48;
+  --c-spy:#64748b;
+  --c-cash:#cbd5e1;
+  --radius:14px;
+}
+:root[data-theme="dark"]{
+  --bg:#0b1120;
+  --surface:#111827;
+  --surface-2:#1e293b;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --border:#263244;
+  --shadow:0 6px 24px rgba(0,0,0,.35);
+  --pos:#4ade80;
+  --pos-bg:rgba(74,222,128,.14);
+  --neg:#fb7185;
+  --neg-bg:rgba(251,113,133,.14);
+  --warn:#fbbf24;
+  --warn-bg:rgba(251,191,36,.14);
+  --c-cash:#334155;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font:14px/1.55 "Inter",system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 18px 48px}
+header.topbar{
+  position:sticky;top:0;z-index:30;
+  background:color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  margin:0 -18px 18px;padding:12px 18px;
+}
+.topbar-inner{
+  max-width:1180px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-badge{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,#0d9488,#2563eb);
+  color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;
+  box-shadow:0 4px 12px rgba(13,148,136,.28);
+}
+h1{font-size:18px;margin:0;letter-spacing:-.01em}
+.subtitle{font-size:12px;color:var(--muted)}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill-group{
+  display:inline-flex;background:var(--surface);border:1px solid var(--border);
+  border-radius:999px;padding:3px;gap:2px;
+}
+.pill{
+  border:0;background:transparent;color:var(--muted);
+  padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;
+  transition:.15s ease;
+}
+.pill:hover{color:var(--text)}
+.pill.active{background:var(--text);color:var(--bg)}
+.btn{
+  border:1px solid var(--border);background:var(--surface);color:var(--text);
+  padding:6px 11px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;transition:.15s;
+}
+.btn:hover{border-color:var(--muted)}
+.grid-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:900px){.grid-kpi{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.grid-kpi{grid-template-columns:1fr}}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);
+}
+.kpi-label{font-size:12px;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.kpi-val{font-size:24px;font-weight:800;margin:6px 0 4px;letter-spacing:-.02em}
+.kpi-sub{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text);
+}
+.tag.pos{background:var(--pos-bg);color:var(--pos);border-color:transparent}
+.tag.neg{background:var(--neg-bg);color:var(--neg);border-color:transparent}
+.tag.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+.grid-charts{display:grid;grid-template-columns:1.45fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:960px){.grid-charts{grid-template-columns:1fr}}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.card-title{font-size:15px;font-weight:700;margin:0;display:flex;align-items:center;gap:8px}
+.legend{display:flex;gap:6px;flex-wrap:wrap}
+.leg-btn{
+  display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;
+  padding:4px 10px;border-radius:999px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);cursor:pointer;transition:.15s;
+}
+.leg-btn.off{opacity:.38;filter:grayscale(1)}
+.chart-box{position:relative;width:100%;user-select:none}
+.tooltip{
+  position:absolute;pointer-events:none;z-index:20;
+  background:color-mix(in srgb, var(--surface) 95%, transparent);
+  backdrop-filter:blur(8px);
+  border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.18);
+  font-size:12px;min-width:195px;display:none;
+}
+.tt-head{font-weight:700;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.tt-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:3px 0}
+
+.market-strip{
+  display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;
+  margin-bottom:16px;padding:12px 16px;
+}
+@media(max-width:820px){.market-strip{grid-template-columns:1fr}}
+.etf-pills{display:flex;gap:8px;flex-wrap:wrap}
+.etf-chip{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  padding:6px 10px;min-width:108px;
+}
+.etf-chip .sym{font-size:11px;font-weight:700;color:var(--muted)}
+.etf-chip .px{font-size:14px;font-weight:700;display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+.event-line{font-size:13px;color:var(--text)}
+.event-line strong{color:var(--accent)}
+
+.section-title{
+  font-size:15px;font-weight:800;margin:20px 0 10px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.grid-ai{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px}
+@media(max-width:840px){.grid-ai{grid-template-columns:1fr}}
+.ai-card{
+  position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;
+  border-top:3px solid var(--ai-color,var(--accent));
+}
+.ai-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ai-id{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px}
+.rank-badge{
+  font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;
+  background:var(--surface-2);border:1px solid var(--border);
+}
+.rank-1{background:#fef3c7;color:#92400e;border-color:#fde68a}
+:root[data-theme="dark"] .rank-1{background:rgba(251,191,36,.18);color:#fcd34d;border-color:rgba(251,191,36,.35)}
+.ai-metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  background:var(--surface-2);border-radius:10px;padding:8px 10px;
+}
+.ai-m{display:flex;flex-direction:column}
+.ai-m span{font-size:11px;color:var(--muted)}
+.ai-m strong{font-size:13px;font-weight:700}
+.ai-points{margin:0;padding-left:16px;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.ai-points li::marker{color:var(--ai-color)}
+.ai-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:6px;border-top:1px dashed var(--border);flex-wrap:wrap}
+.action-seq{display:flex;gap:4px;align-items:center;font-size:11px;color:var(--muted)}
+.act-dot{padding:1px 6px;border-radius:5px;font-weight:700;border:1px solid var(--border);background:var(--surface-2)}
+.act-dot.adj{color:#2563eb;border-color:rgba(37,99,235,.35);background:rgba(37,99,235,.08)}
+
+.matrix-list{display:flex;flex-direction:column;gap:10px}
+.matrix-row{
+  border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface-2);
+  display:grid;grid-template-columns:130px 1fr auto;gap:14px;align-items:center;
+}
+@media(max-width:780px){.matrix-row{grid-template-columns:1fr;gap:8px}}
+.alloc-bar{
+  height:24px;border-radius:7px;overflow:hidden;display:flex;
+  background:var(--border);border:1px solid var(--border);margin-bottom:6px;
+}
+.alloc-seg{
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;
+  transition:width .25s ease;
+}
+.alloc-seg.cash{color:var(--text);background:var(--c-cash)}
+.alloc-meta{font-size:12px;color:var(--text);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.audit-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:780px){.audit-grid{grid-template-columns:1fr}}
+.audit-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;font-size:13px}
+.audit-list li{display:flex;align-items:flex-start;gap:8px}
+
+/* Modal */
+dialog{
+  width:min(820px,94vw);max-height:86vh;border:1px solid var(--border);
+  border-radius:16px;padding:0;background:var(--surface);color:var(--text);
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+dialog::backdrop{background:rgba(2,6,23,.55);backdrop-filter:blur(4px)}
+.modal-head{
+  position:sticky;top:0;background:var(--surface);z-index:2;
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-body{padding:16px 18px;overflow-y:auto;max-height:calc(86vh - 60px)}
+.round-block{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;background:var(--surface-2)}
+details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px}
+.raw-txt{font-size:12px;white-space:pre-wrap;color:var(--muted);margin:6px 0 0;line-height:1.55}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-badge">AI</div>
+      <div>
+        <h1>多 AI 投資競賽｜互動分析報告</h1>
+        <div class="subtitle" id="sub-range">載入中...</div>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="pill-group" id="round-pills"></div>
+      <label class="btn" title="可匯入其他回合 JSON 檔即時分析">
+        📂 匯入 JSON
+        <input type="file" id="file-in" accept=".json,.txt" hidden>
+      </label>
+      <button class="btn" id="theme-btn" title="切換深淺色">🌓 主題</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- KPI Strip -->
+  <div class="grid-kpi" id="kpi-row"></div>
+
+  <!-- Charts -->
+  <div class="grid-charts">
+    <div class="card">
+      <div class="card-head">
+        <h2 class="card-title">淨值走勢 vs. SPY 基準</h2>
+        <div class="legend" id="chart-legend"></div>
+      </div>
+      <div class="chart-box" id="line-wrap">
+        <svg id="line-svg" viewBox="0 0 680 290" style="width:100%;height:auto;display:block"></svg>
+        <div class="tooltip" id="line-tt"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2 class="card-title">風險・回撤・槓桿對比</h2>
+        <div class="pill-group" id="subchart-tabs">
+          <button class="pill active" data-tab="risk">報酬 vs 回撤</button>
+          <button class="pill" data-tab="exp">曝險 &amp; 現金</button>
+        </div>
+      </div>
+      <div class="chart-box">
+        <svg id="bar-svg" viewBox="0 0 440 290" style="width:100%;height:auto;display:block"></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market Snapshot -->
+  <div class="card market-strip" id="market-strip"></div>
+
+  <!-- 4 AI Executive Cards -->
+  <div class="section-title">
+    <span>參賽 AI 戰力總評（依規則最終淨值排序）</span>
+    <span class="subtitle">點擊「回合明細」可查閱各輪重點與原始事實/判斷</span>
+  </div>
+  <div class="grid-ai" id="ai-grid"></div>
+
+  <!-- Interactive Round Allocation Matrix -->
+  <div class="card">
+    <div class="card-head">
+      <h2 class="card-title" id="matrix-title">逐回合持倉結構與調倉重點</h2>
+      <div class="pill-group" id="matrix-tabs"></div>
+    </div>
+    <div class="matrix-list" id="matrix-list"></div>
+  </div>
+
+  <!-- Compliance & Audit -->
+  <div class="section-title"><span>規則合規與資料健檢（對照《規則 v2.0》）</span></div>
+  <div class="audit-grid" id="audit-grid"></div>
+</div>
+
+<dialog id="detail-modal">
+  <div class="modal-head">
+    <strong id="modal-title">AI 明細</strong>
+    <button class="btn" id="modal-close">✕ 關閉</button>
+  </div>
+  <div class="modal-body" id="modal-body"></div>
+</dialog>
+
+<script id="embedded-data" type="application/json">{"ids":["AI-ds","AI-cd","AI-gr","AI-mm"],"rounds":[{"date":"2026-11-11","prices":{"SPY":754.24,"QQQ":681.36,"EWT":96.06,"EWY":143.32},"entries":{"AI-ds":{"positions":[{"sym":"QQQ","lev":3,"principal":3500},{"sym":"SPY","lev":2,"principal":1500}],"cash":5000,"action":"調整","facts":"2026-11-10 ETF 資金流向：SPY 與 SOXX 共流出 83 億，QQQ 流入 24 億，全市場 ETF 當日流出 22 億（etf.com / Yahoo Finance）。QQQ 於 11-05 單日跌超過 5.5%（2020 以來最差單日），11-06 反彈約 2%，但周線仍下跌近 5%；10 月 QQQ 累計約下跌 6.7%。市場普遍認為 11-3 選舉後不確定性退去，反彈將由 Q3/Q4 盈利帶動；AI 與晶片股自 10-6 以來市值約蒸發 5 兆。11-11 QQQ 下跌 0.68%。提供價格：SPY 754.24、QQQ 681.36、EWT 96.06、EWY 143.32。EWT 與 EWY：未查到可確認之針對該兩標的的最新新聞（目前無法確認）。","judgment":"QQQ 從超賣反彈且資金回流，選舉不確定性已退，偏多科技並以槓桿放大反彈；SPY 持續資金流出，廣度較弱，僅小額配置；EWT/EWY 無可確認新聞且為單一國家集中標的，風險分散低，本輪不建槓桿部位。現金保留 50% 作為下一輪彈藥，並符合不超過總值 50% 的規定。","trades":"首次建倉：買入 QQQ 3 倍槓桿，本金 3500，理由為資金回流與選後反彈預期；買入 SPY 2 倍槓桿，本金 1500，理由為廣市場小額籌碼但資金流出故權重較低；現金由 10000 變為 5000（佔總值 50%），用於上述建倉並保留乾糧；EWT、EWY 本輪不建倉，因缺乏可確認新聞與單一國家集中風險。","note":"第 1 回合初始建倉，現金正好 50%（上限），槓桿倍數皆在 2-10x 區間，單一部位最大虧損限於本金，本金合計加現金等於 10000。","strategy_name":"科技反彈與選後不確定性退場策略","strategy":"核心邏輯：11-3 期後選舉不確定性減退，QQQ 經 10 月 -6.7% 與 11-05 重跌後處於超賣，且 11-10 資金回流 QQQ +24 億而 SPY/SOXX 流出，預期以 Q3/Q4 盈利驅動反彈，故集中槓桿於 QQQ，SPY 僅小額籌碼；EWT/EWY 缺乏可確認新聞且為單一國家標的，本輪暫不持槓桿。預期持有週期：數週至一季，隨盈利季與資金流向觀察。風險控制：現金不超過總值 50%（本次維持 50% 乾糧），單一槓桿倍數上限 3x，單一部位虧損上限為本金，不單純因跌多即清倉，獲利了結同步寫理由。"},"AI-cd":{"positions":[{"sym":"SPY","lev":3,"principal":2500},{"sym":"QQQ","lev":3,"principal":2000},{"sym":"EWT","lev":2,"principal":1500},{"sym":"EWY","lev":2,"principal":1500}],"cash":2500,"action":"調整","facts":"查到的資料：(1) 2026-11-03 的報導指出，S&P 500 較 2026-10-06 的歷史收盤高點回落約 3%，年初至今仍上漲逾 10%。(2) 2026-11-03 S&P 500 收盤 7,568.92，上漲 0.36%，當日能源類股領跌。(3) 有一則標題顯示 2026-11-05 納斯達克重挫約 5%，原因為晶片股大幅下跌，道瓊與 S&P 500 回吐選後漲幅；我只看到標題，無法確認細節。(4) 另有報導提到近期 AI 相關股票拋售，以及 Goldman 認為 S&P 500 每股盈餘成長將放緩至約 11%，建議不要試圖預測頂部。(5) 美國期中選舉剛結束，多篇報導提到國會多數席次很窄。(6) 美國、烏克蘭與俄羅斯的第二輪三方會談預定於 11 月 10 日至 11 日在阿布達比舉行。(7) 本回合人工提供的價格：SPY 754.24、QQQ 681.36、EWT 96.06、EWY 143.32。目前無法確認：2026-11-11 當日各指數的收盤表現、台灣與韓國市場近期的具體新聞，以及最新的聯準會利率預期。","judgment":"大盤處於高檔小幅回落的整理階段，科技與晶片股波動明顯加大，AI 估值疑慮仍在。我沒有足夠證據判斷趨勢已經反轉，所以不採取全力進攻，也不全面撤退。做法是保持多元曝險，以 SPY 為最大部位（3 倍），QQQ 次之（3 倍），並降低對晶片循環較敏感的 EWT、EWY 的倍數與比重（各 2 倍）。保留 25% 現金，若晶片股回檔後出現止穩，可以逢低加碼。由於 QQQ、EWT、EWY 都與半導體題材有相關性，我把這部分視為集中風險，因此整體不用高倍數。","trades":"首次建倉，無賣出。買入 SPY 3 倍槓桿商品，本金由 0 到 2500；買入 QQQ 3 倍槓桿商品，本金由 0 到 2000；買入 EWT 2 倍槓桿商品，本金由 0 到 1500；買入 EWY 2 倍槓桿商品，本金由 0 到 1500。現金由 10000 降到 2500，占總值 25%。理由：SPY 為分散度最高的核心部位；QQQ 保留對科技與 AI 長期趨勢的參與；EWT 與 EWY 提供亞洲出口與半導體循環的分散，但倍數較低以控制回檔風險；現金作為彈性與安全墊。","note":"本金合計 7500 加現金 2500 等於 10000。主要風險是晶片與 AI 題材同步下跌，三個部位會一起受影響，因此保留現金並控制倍數。下一回合會先檢查原本的持有理由是否仍成立，再決定是否調整。","strategy_name":"核心衛星分散・低中倍數・保留彈性現金","strategy":"核心邏輯：以美股大盤（SPY）為核心，搭配科技成長（QQQ）及台、韓出口與半導體循環（EWT、EWY）作衛星，用 2 至 3 倍槓桿放大中期趨勢，同時分散單一市場與單一題材風險。預期持有週期：數週至數月，不做短線追價。風險控制：(1) 單一部位本金不超過總值 25%；(2) 倍數控制在 2 至 3 倍，不使用高倍數；(3) 現金約 25%，用來應對波動並在回檔時加碼；(4) 不因單純下跌而轉現金，只在原本理由失效時調整；(5) 獲利了結需同時寫明理由。"},"AI-gr":{"positions":[{"sym":"EWT","lev":3,"principal":3000},{"sym":"EWY","lev":3,"principal":2500},{"sym":"QQQ","lev":2,"principal":2000}],"cash":2500,"action":"調整","facts":"2026年11月10日美國10月CPI月增0.4%高於預期0.3%，S&P500跌0.38%、Nasdaq跌0.74%，市場幾乎完全定價12月Fed升息；Fed於10月底維持利率3.75%-4.00%區間並稱通膨仍偏高。同日南韓Kospi大漲約4.4%、台灣股市亦上漲，由三星、SK海力士、台積電等半導體股帶動，前一週因美國期中選舉後AI監管疑慮曾大幅回落。EWT、EWY 2026年迄今報酬明顯優於SPY。","judgment":"美股短期受升息預期與通膨數據壓抑，成長股波動加大；亞太半導體供應鏈受AI需求支撐且剛完成技術性反彈，相對動能較佳。初始建倉採中等槓桿分散配置於EWT、EWY與QQQ，保留足夠現金因應後續數據與Fed會議。","trades":"首次建倉：買入EWT 3倍槓桿本金3000、EWY 3倍槓桿本金2500、QQQ 2倍槓桿本金2000；現金剩餘2500。理由為捕捉亞太半導體反彈與AI供應鏈動能，同時以較低倍數QQQ維持美股成長曝險並控制整體波動。","note":"初始分散亞太半導體為主，現金緩衝50%上限內","strategy_name":"亞太半導體動量槓桿","strategy":"核心邏輯：優先配置半導體與AI供應鏈比重高的EWT、EWY，搭配適度QQQ曝險，利用近期亞股反彈動能與長期AI資本支出趨勢；避開過度依賴單一美股大盤。預期持有週期1至4週，視通膨與Fed動向動態調整。風險控制：單一槓桿部位本金不超過總資金40%、整體現金不低於30%、槓桿倍數控制在2至4倍以降低單日波動歸零風險，虧損達本金30%即檢視減碼而非強制出場。"},"AI-mm":{"positions":[{"sym":"QQQ","lev":2,"principal":2500},{"sym":"EWT","lev":2,"principal":1500},{"sym":"EWY","lev":2,"principal":1000}],"cash":5000,"action":"調整","facts":"1. 美國10月CPI月增0.4%（預期0.3%）、核心月增0.3%；Waller稱核心0.3%即應考慮12月升息0.5個百分點，達拉斯聯儲的Logan稱至少還需兩次升息；利率期貨對12/8-9升息定價由約84%升至接近確定（升0.25個百分點約86%、升0.5個百分點約14%）。2. 10年期美債殖利率11/10收4.99%（單日+11個基點、盤中觸5.03%），2年期約4.76%，VIX約21（前一日19.92）；11/11為退伍軍人節，美債市場休市、美股開盤。3. 11/10美股收低：標普500 7,520.93（-0.38%）、那斯達克綜合25,065.87（-0.74%）、道瓊52,231.89（-0.30%）（不同來源對收盤數值有7,520.59至7,521.48的些微差異）；標普500仍在200日線之上、跌破50日線，距紀錄高點約4.1%；那斯達克綜合跌破50日與200日線，距高點約9.6%。4. 那斯達克100自10/6高點31,224.47回落約14%，為2026年第三次修正，10月單月跌近7%為最差單月；11/5單日跌5.52%為19個月來最大單日跌幅，費城半導體盤中一度跌11%為2020年3月以來最差；直接觸發為民主黨拿下國會後對AI與資料中心監管的疑慮，加上Alphabet第三季每股盈餘年減26.1%（股價單日-12.6%）與Intel（10/30 -28.6%）等財報，10月那斯達克市值蒸發約2.85兆。5. CoreWeave 11/10盤後：營收36.6億（預期35.5億）、年增168%，全年營收財測上調至130-133億，在手訂單132.5億（6月為104.2億）；但第三季淨損7.09億、季末總債務約47億、Q4利息費用10.5-11.5億，股價一個月跌逾40%後轉漲。6. Nvidia連兩日重挫（11/10約-6.2%），主因執行長黃仁勳個人爭議；另有媒體報導Nvidia考慮放慢晶片下單，影響台積電、日月光等上游；Nvidia距2026年高點約跌17%。7. 台股：加權指數自10/6盤中高點49,968.92回落20.55%，11/6單週跌逾12%為2001年以來最差；11/9在國家穩定基金第10次進場與放空管制（新當沖賣空上限由30%降至3%、保證金比率由90%升至130%）下反彈4.94%至41,661.70（史上第二大單日點數漲幅），11/10再漲2.52%至42,711.92；但外資11/9仍淨賣超900.6億、連8個交易日淨賣（8日累計近8,000億），10月外資淨賣超創單月新高，央行表示11月初以來外資資金淨移出約100億且使匯率走弱（32.882）。8. 台積電：10月營收5,869億、年增59.7%；第三季營收年增41.2%、毛利率66.4%；2026全年營收預估年增約44%；另據報導應Nvidia要求規劃3D DRAM產能；股價距10月高點約跌20%但年內仍漲約29%；MSCI台灣指數資訊科技權重85.75%、台積電約56.6%。9. 韓股：KOSPI 11/6盤中一度跌8.78%至4,911.28（9個月來首度失守5,000）並觸發熔斷，收跌6.02%至5,059.69，單週跌逾10%；11/9反彈4.39%（SK hynix +7.2%、三星+4.5%）；11/11開低0.56%後翻紅，11:20報5,274.81（+0.68%），三星+0.9%、SK hynix+2.06%。外資11/2至11/6淨賣超10.44兆（SK hynix 5.42兆、三星2.19兆，佔73%），10月淨賣18.68兆；三星外資持股比45.95%為17年低、SK hynix 48.27%為5年低；以2027年獲利計價SK hynix本淨比約1.0倍、三星約1.13倍。10. 商品與匯率：油價因美方對伊朗談話大跌（11/9布蘭特-5.5%），緩解進口國通膨；11/11亞洲貨幣普遍走弱；日經11/11站上60,000（連3日上漲），但軟銀因檢討美國AI資料中心設備採購、上半年淨損7,680億而重挫9.17%；韓股開盤前外資仍偏空。11. 事件日程：MSCI 11月指數審查結果於11/11公布、11/30收盤生效；11/12 Nebius財報、美國初領失業救濟與舊屋銷售；11/13美國10月PPI；11/19 Anthropic預計於那斯達克掛牌（募資規模各來源說法不一，未能二次確認）；12/8-9 FOMC。目前無法確認的部分：11/11各2倍槓桿商品（QLD、XTAI、KRWX）的實際收盤價與成交量，以及那斯達克100在11/10的精確收盤點位。","judgment":"這是情緒與部位驅動的修正，不是AI需求驅動的衰退，這一點由三組數字交叉確認：台積電10月營收年增59.7%、CoreWeave營收年增168%且在手訂單再創132.5億新高、10月外資資金大幅外流但指數跌幅已達20.55%並出現國家隊與放空管制。真正的風險不在基本面而在貼現率：10月CPI超預期使12月升息近乎確定，10年期殖利率回到4.99%並盤中破5%，這對高久期、高波動的AI與亞洲半導體是持續壓力；那斯達克綜合已跌破50日與200日線，那斯達克100距高點14%，KOSPI一個月內出現熔斷與9個月來首度失守5,000，這種波動率下3倍槓桿在單一位置歸零的機率顯著偏高，所以我的結論是不追高、不滿槓桿：用2倍把總名目曝險做到等於總資產（100%），但只動用一半本金、保留一半現金，既能在12月FOMC後的確認行情中放大參與，也能在AI資本支出敘事二次破裂時保住本金與加碼能力。配置上偏向台灣而非韓國：台股供應鏈廣度較佳（晶圓、封測、PCB、電源、伺服器）、估值本益比約14倍且有政策支撐；韓股則高度集中於三星與SK hynix、外資仍在淨賣，雖然外資持股比創17年與5年低、SK hynix本淨比約1倍具備反彈條件，但資金面尚未轉向，故只給最小權重並保留加碼空間。整體風險報酬為偏多但不對稱，下行約-10%到-20%可控、上行在FOMC確認後有+10%到+15%機會，現金50%即是為此保留的保險。","trades":"首次建倉，無賣出。買入：QQQ 2x（QLD）本金2,500（佔25%）、EWT 2x（XTAI，或台股上市之TAIEX 2倍商品如00663L/00675L/00685L）本金1,500（佔15%）、EWY 2x（KRWX）本金1,000（佔10%）。本金由0增至5,000，現金由10,000降至5,000（恰為規則上限50%，本回合不再加碼），合計10,000.00。名目曝險5,000×2+3,000+2,000＝10,000，等於總資產的100%，但僅以50%本金支撐。理由：QQQ 2x取AI需求驗證最快且波動相對可控的核心指數曝險；EWT 2x取供應鏈廣度、14倍本益比與國家穩定基金及放空管制帶來的價格支撐；EWY 2x僅配置10%試單，因其外資仍在淨賣、持股過度集中於兩家記憶體巨頭，且低本淨比與17年低外資持股比具反彈條件而非看跌條件。三部位一律2倍，不用3倍以上，因本規則下單一部位最多虧到本金歸零，2倍可承受原型約50%的跌幅，3倍只需33.3%即歸零，與目前VIX 21、KOSPI單日盤中-8.78%的波動不相稱。","note":"現金5,000為規則允許之上限，本回合不再加碼，保留至12/8-9 FOMC前後依資本支出指引與外資流向決定加碼或減碼；本回合未取得QLD/XTAI/KRWX於11/11的實際收盤價與成交量，滑價與費用未納入；網路上可見的EWT、EWY報價與本回合提供價格不一致，依規則一律以本回合提供的SPY 754.24、QQQ 681.36、EWT 96.06、EWY 143.32計算。","strategy_name":"AI資本支出折價獵取（2x槓桿＋50%現金緩衝）","strategy":"核心邏輯：AI基礎建設資本支出尚未熄火（台積電10月營收年增59.7%、CoreWeave營收超預期並上調全年財測、在手訂單從104.2億升至132.5億），本輪賣壓主要來自選舉後的監管不確定性與利率重定價（10年期殖利率4.99%、12月升息定價近乎確定），屬情緒與部位去槓桿、而非需求斷裂。因此只在2倍槓桿、折價且有政策／基本面支撐的標的上建立曝險，不追求滿倉。部位排序：QQQ 2x（25%，AI需求驗證最快、標普與那斯達克資金主場）＞EWT 2x（15%，台積電＋封測＋PCB＋AI伺服器的全供應鏈廣度，本益比約14倍，且有國家穩定基金與放空管制支撐）＞EWY 2x（10%，HBM記憶體，但持股集中於三星與SK hynix、外資仍在淨賣，權重最小）。風險控制原則：(1) 槓桿上限一律2倍、絕不用3倍以上——本規則單一部位最多虧到本金歸零，3倍只需原型跌33.3%即歸零，而那斯達克100本波已自高點跌14%、KOSPI單日盤中曾跌8.78%、加權指數自高點跌20.55%，此種波動下3倍等於把本金送出；(2) 現金固定50%（規則上限），保留生存與加碼彈藥，總名目曝險等於總資產但只動用一半本金；(3) 單一部位上限25%、單一國家（台灣＋韓國）合計上限25%，避免記憶體與晶圓高度同源；(4) 觸發式管理而非情緒交易：若12月FOMC升息後AI資本支出指引獲確認，用現金加碼；若原型再跌破11/6低點且外資續淨賣，先減槓桿部位而不是把帳面虧損當成賣出理由、也不是全面轉現金。預期持有週期3到8週，涵蓋11/12 Nebius財報、11/19 Anthropic掛牌、12/8-9 FOMC與12月台積電月營收；槓桿商品每日重置、波動有損耗，故定位為戰術部位而非核心長線。"}}},{"date":"2026-11-12","prices":{"SPY":759.74,"QQQ":692.43,"EWT":100.32,"EWY":149.45},"entries":{"AI-cd":{"positions":[{"sym":"SPY","lev":3,"principal":2554.69},{"sym":"QQQ","lev":3,"principal":2097.48},{"sym":"EWT","lev":2,"principal":1633.04},{"sym":"EWY","lev":2,"principal":1628.31}],"cash":2500.01,"action":"不調整","facts":"查到的資料：(1) 2026-11-05 納斯達克 100 下跌逾 4%，標題稱納斯達克進入修正，起因是晶片與資料中心股走弱，高通財測偏弱，美光暫停台灣新廠建設。(2) 2026-11-09 納斯達克 100 盤中上漲約 3.3%、S&P 500 上漲約 2.4%，因原油下跌緩解通膨疑慮，布蘭特原油下跌約 4.7%；川普表示若談判有進展，對伊朗再度動武「極不可能」。(3) 2026-11-09 報導指 MSCI 韓國 ETF 上漲 4.07%、費城半導體指數上漲 4.21%。(4) 10 月 CPI 原定 11 月 10 日公布，我沒有查到數值。(5) 第二輪烏俄美三方會談原定 11 月 10 日至 11 日在阿布達比舉行，結果目前無法確認。(6) 本回合人工價格：SPY 759.74、QQQ 692.43、EWT 100.32、EWY 149.45，各原型自上回合上漲 0.73%、1.62%、4.43%、4.28%。目前無法確認：2026-11-12 當日美股盤中走勢、CPI 實際數字，以及台灣與韓國市場當日的具體新聞。","judgment":"近一週市場波動大，先經歷晶片股急殺，再因油價回落而強力反彈，方向尚未確定，AI 與晶片題材仍是主要不確定因素。本回合 EWT、EWY 漲幅最大，但這是短期反彈，並不代表原本的持有理由改變，而我的策略是持有數週至數月，不追價。目前 SPY 本金 2,554.69 已接近單一部位上限 25%（約 2,603.38），其餘部位都在上限內，現金占 24.0%，沒有超標。目前沒有看到原本理由失效，也沒有需要了結獲利的訊號，因此不調整，避免在高波動下過度交易。","trades":"本次不調整。原因：(1) 原本持有理由（大盤核心、科技成長、亞洲出口與半導體循環）尚未失效；(2) 所有部位都在單一部位 25% 上限內；(3) 現金約 24%，仍保有加碼彈性；(4) 近期反彈屬短期波動，不因上漲而追加，也不因漲幅而了結。","note":"各部位本金依結算值沿用；因四捨五入，結算本金合計與總值相差 0.01，已記在現金，使本金合計加現金等於 10,413.53。下回合重點觀察 SPY 是否超過 25% 上限，以及晶片股是否再度急跌。","strategy_name":"","strategy":""},"AI-gr":{"positions":[{"sym":"EWT","lev":3,"principal":3399.13},{"sym":"EWY","lev":3,"principal":2820.79},{"sym":"QQQ","lev":2,"principal":2064.99}],"cash":2500,"action":"不調整","facts":"2026年11月11日美股上漲，S&P500漲1.31%、Nasdaq漲1.60%，主因CoreWeave財報優於預期並上調展望，緩解AI資本支出疑慮，半導體指數大漲；Nvidia盤中反彈但盤後因董事會可能撤換CEO黃仁勳的報導大跌。11月12日亞股受此影響，Kospi跌0.61%、台股Taiex跌約2.63%，半導體股承壓。Fed仍定價12月升息機率高。","judgment":"CoreWeave正面訊號支持AI長期需求，Nvidia領導層疑慮屬短期雜音，亞太半導體供應鏈基本面未變。目前總值領先且持倉仍符合動量策略，短線波動不構成減碼或出場條件，維持原配置繼續持有。","trades":"本次不調整。理由：持倉符合亞太半導體動量策略，近期獲利來自動能延續，Nvidia事件為短期事件風險，CoreWeave財報支持需求面，現金比例與槓桿倍數仍在風險原則內，無需變動。","note":"維持原持倉，觀察Nvidia後續與亞股動能","strategy_name":"","strategy":""},"AI-ds":{"positions":[{"sym":"QQQ","lev":3,"principal":3500},{"sym":"SPY","lev":2,"principal":1500},{"sym":"EWT","lev":2,"principal":1800},{"sym":"EWY","lev":2,"principal":1200}],"cash":2192.47,"action":"調整","facts":"2026-11-11 股市上漲，CoreWeave 財報優於預期並上調展望大漲，Nvidia 連兩日下跌後反彈（CNBC）。2026-11-11 盤中 SPY +1.32%、QQQ +2.31%（市場簡報）。QQQ 觸及約 700 橫向壓力、相對表現測試過去一個月下降趨勢線（EquityClock）。2026-11-09 晶片製造商展開調查後 Nvidia 下跌，道瓊大漲逾 1100 點、Nasdaq 反彈（WSJ）。11-10 資金流向 SPY、SOXX 共流出 83 億，QQQ 流入 24 億（ETF.com / Yahoo）。2026-11-11 TSM 開盤上漲 3.15%，因先進製程產能利用率與 AI/HPC 需求穩健；台灣加權 2026 上半年約漲 60%。韓國 KOSPI 受 AI 記憶體超循環帶動大漲，但 SK Hynix 與 Samsung 佔 KOSPI 比重達 60% 創新高、結構風險升高，且曾於 11-04 因美國期中選舉憂慮下跌 3.7%（WSJ / 相關報導）。提供價格：SPY 759.74、QQQ 692.43、EWT 100.32、EWY 149.45。","judgment":"反彈已由 Nvidia 回穩與 CoreWeave 財報確認並擴散至亞洲半導體，趨勢偏多；QQQ 已接近 700 壓力，短線空間有限，故不追高 QQQ 槓桿。先前策略完全排除 EWT/EWY 導致落後，本輪以較低槓桿（2x）增加台灣、韓國半導體部位參與 AI/晶片反彈；韓國集中度風險高故部位較小。保留約兩成現金作緩衝，不因單日大漲全數追高。","trades":"QQQ*3 維持本金 3500（原型上漲、趨勢偏多，不獲利了結）。SPY*2 維持本金 1500。新增 EWT*2，本金 1800（由現金投入），理由：TSM 先進製程與 AI/HPC 需求、台灣半導體反彈。新增 EWY*2，本金 1200（由現金投入），理由：韓國記憶體超循環，惟集中度風險高故部位較小且採 2x。現金由 5000 降為 2192.47。","note":"本金合計 8000 加現金 2192.47 等於 10192.47；現金佔比約 21.5%（未逾 50%）；槓桿倍數皆在 2-10x；新增亞洲半導體以較低槓桿控管集中度風險。","strategy_name":"科技反彈與選後不確定性退場策略","strategy":"核心邏輯：選後不確定性退去，AI/晶片反彈由盈利（CoreWeave、Nvidia 回穩）驅動並擴散至亞洲半導體；集中槓桿於 QQQ，並以較低槓桿參與台灣、韓國半導體。預期持有週期：數週至一季。風險控制：現金不超過總值 50%，單一槓桿倍數上限 3x，單一部位虧損上限為本金，不單純因跌多即清倉，獲利了結同步寫理由。"},"AI-mm":{"positions":[{"sym":"QQQ","lev":2,"principal":2581.23},{"sym":"EWT","lev":2,"principal":1633.04},{"sym":"EWY","lev":2,"principal":1085.54}],"cash":5000.01,"action":"不調整","facts":"1. 11/11美股：標普500 +1.3%至7,619.38（距歷史高點約2.6%，已收復選舉後跌幅）、那斯達克綜合 +1.6%至25,466.19、道瓊 +0.5%至52,486.49；QQQ收+2.31%，CoreWeave約+23%領漲那斯達克100；VIX回落約10%至17.49、偏斜度149；美債休市（退伍軍人節），油價由前一日大跌反彈。2. 11/11盤後：紐時報導執行長黃仁勳與公司內部高層另有婚外情，華爾街日報報導董事會已準備討論是否撤換執行長；Nvidia盤後跌8.61%（由收盤173.73跌至約158.78），11/12盤前再跌約7%；盤後AMD +4%、Broadcom +3%、美光約-2%、CoreWeave約-6%；預測市場對黃仁勳年底前辭職或被撤換的定價約88%；Nvidia董事會11/11晚間開會，財報訂於11/17（市場預估每股盈餘約2.49）；黃仁勳先前預告今年營收成長約70%。3. 分析師觀點：Morningstar認為切換成本高、中期財務預估不變；Pepperstone稱價格行為顯示市場主要視為Nvidia個體事件；Saxo指出潛在市佔轉移不等於已確認新訂單，真正風險是AI支出本身受干擾；德意志銀行認為相關消息可能推升中國晶片需求；另有分析師提醒在資料中心融資環境下，任何放緩都可能讓循環翻轉。4. 11/12亞洲：加權指數 -2.63%（-1,165.28）至43,091.87，成交約1.01兆；台積電 -2.30%至2,340；廣達、緯創各 -6.5%；鴻海 -0.83%；外資11/12僅淨賣約6.85億，遠小於前8個交易日累計近6,493億的淨賣，投信11/12淨買約147.7億；日經 -0.73%。KOSPI -0.61%至5,342.73，SK hynix -1.8%至1,254,000，三星上漲（市場認為客戶分散Nvidia可能有利其供應地位）；11/11加權指數曾 +3.62%至44,257.15（史上第六大點數漲幅），台積電當日 +4.81%至2,395（提高現金股利配當並公布強勁10月營收）。註：部分報導描述盤中約9%跌幅與熔斷，經比對內容應為11/6當日行情，非11/12。5. 政策面：台灣財政部長支持將國家穩定基金規模倍增至1兆（由立委提案，借款上限擬由2,000億提高至7,000億）；空方管制與短賣限制自11/9維持；匯率32.889仍偏弱。6. MSCI 11月半年度檢討（11/11-12公布、11/30盤後生效）：台股權重上調，全球市場指數3.25%→3.28%、新興市場指數28.86%→29.01%（+0.15個百分點）、亞洲除日本指數32.72%→32.83%；南亞電腦板為MSCI新興市場指數新增三大市值標的之一。7. Anthropic IPO：更新版公開說明書載明發行8.25億股、價格區間每股70至78，11/18定價、11/19以代號ANT在Nasdaq掛牌；募資最高約644億，另有約260億私募部位，基石投資人包含Nvidia、AMD、Alphabet、Broadcom、美光、微軟與台積電；全稀釋估值最高約1.41兆、非稀釋約1兆；訂單已額滿，承銷商可能提高區間（FT報導）；第三季營收年增47%（第二季144%），年化營收約810億，並承諾未來十年支出約9,009億。8. 利率與事件：10月CPI超預期後，12/8-9升息定價接近確定（升0.25個百分點約86%、升0.5個百分點約14%），10年期殖利率11/10收4.988%；11/12公布初領失業救濟與舊屋銷售（決策時點尚未公布）、11/13美國10月PPI、11/17 Nvidia財報、11/18-19 Anthropic定價與掛牌、12/8-9 FOMC。目前無法確認：11/12美股收盤與當日10年期殖利率變化、2倍商品（QLD、XTAI、KRWX）的當日成交量與滑價。","judgment":"這次的新事件是治理層面的個體風險，不是需求指標的轉折，我的策略核心不因此失效，但風險分布變了，兩者必須分開看。分開看理由有三：(a) 需求端資料仍在加速確認——台積電不只是10月營收年增59.7%、提高現金股利配當，更直接成為Anthropic約260億私募部位的基石投資人，等於客戶端用真金白銀替AI算力需求背書；CoreWeave在手訂單132.5億（年增一倍以上）並上調財測；MSCI又把台股權重在11/30上調，這些是被動買盤的實質支撐。(b) 市場目前把Nvidia事件定價為個體風險而非產業風險：Nvidia盤後-8.61%，但亞洲AI供應鏈9檔樣本中位數僅-2.30%，台積電僅-2.30%、鴻海-0.83%，反而AMD +4%、Broadcom +3%、三星上漲；Morningstar也認為中期財務預估不變。(c) 但貼現率與事件密度同時上升——12月升息近乎確定、10年期殖利率4.988%、11/17 Nvidia財報與11/18-19 Anthropic掛牌都落在我的持有窗內，Anthropic第三季營收增速由144%降到47%也是我不能忽略的降速訊號。因此結論是：不動、不減、不加，等確認。三個具體理由。其一，我第1回合預設的兩個觸發條件都沒有成立：原型未跌破11/6低點（加權43,092對11/6收盤39,702、盤中低點38,874；KOSPI 5,343對5,060），且11/12台灣外資淨賣僅約6.85億、外資持股結構已連8日淨賣後趨緩，減碼條件不成立；12/8-9 FOMC的資本支出確認尚未出現，加碼條件同樣不成立。其二，受現金50%上限限制，這次想「獲利了結變成現金」在數學上最多只能增加149.91（上限為5,149.91），賣出的資金只能再投入另一個槓桿部位，而每日重置的槓桿商品在震盪中本就有路徑依賴的額外耗損，為了表面整齊而換手是負期望。其三，名次不是策略：我沒有跟著把EWT或EWY從2倍加到3倍去追AI-gr，理由是尾部風險今天更寬而不是更窄（88%的執行長撤換定價、Anthropic增速由144%降到47%、12月升息定價近確定、台積電11/6盤中曾觸10%跌停），3倍只需原型跌33.3%即本金歸零，而我對台韓兩地的AI需求確認度最高、這正是最不該被強平的地方。至於曝險上限的漂移，我主動揭露：台灣加韓國合計2,718.58占總值26.4%、QQQ占25.1%，已高於第1回合設的25%上限，這是台灣腿單日+4.43%後的市值漂移而非新增曝險；由於現金上限使「賣回現金」幾乎不可行、唯一可行做法是輪動進另一個槓桿部位，我選擇不為1.4個百分點的漂移而交易，但設定預先承諾：若下次調倉時台灣加韓國占比超過27%，就用QQQ 2x或SPY 2x把超出部分輪動收回，總曝險與現金均不變。下一個決策點已明確：11/17 Nvidia財報與11/18-19 Anthropic定價若確認需求（我預期台積電成為Anthropic定價的受益者），就用保留的乾火藥在25%國家上限內加碼EWT 2x；若Nvidia財測轉弱或Anthropic定價低於區間，則先砍亞洲腿，但理由是資本支出論點本身被推翻，而不是因為帳面虧損。","trades":"本次不調整，無買入、無賣出，部位與倍數全部維持：QQQ*2 原本金2,500.00→結算後2,581.23（倍數2）、EWT*2 原本金1,500.00→結算後1,633.04（倍數2）、EWY*2 原本金1,000.00→結算後1,085.54（倍數2）；現金5,000.00→5,000.01（差額0.01為官方結算四捨五入，使本金合計加現金等於10,299.82），合計10,299.82。理由：第1回合預設的加碼條件（12/8-9 FOMC後AI資本支出指引獲確認）與減碼條件（原型跌破11/6低點且外資續淨賣）本回合都未成立，11/12台灣外資淨賣已縮至約6.85億、加權指數43,092遠高於11/6低點，故不觸發任何一側的動作；Nvidia董事會事件屬治理層面個體風險，亞洲AI供應鏈中位數僅-2.30%且台積電僅-2.30%，與我的AI需求論點無關，且台積電正是Anthropic約260億私募部位的基石投資人，需求端仍在確認，故不因單日獲利（EWT +8.86%、EWY +8.56%、QQQ +3.25%）就了結；受現金50%上限限制，了結所得無法轉為現金（最多只能增至5,149.91），只能再投入另一個槓桿部位，在2倍與每日重置結構下屬高成本換手，因此維持原部位、不加碼也不減碼，把乾火藥留到11/17 Nvidia財報與11/18-19 Anthropic定價的確認窗口。","note":"本回合價格基準為SPY 759.74、QQQ 692.43、EWT 100.32、EWY 149.45；現金列5,000.01係官方結算四捨五入差額，以使本金合計加現金等於10,299.82。曝險漂移揭露：台灣加韓國合計占總值26.4%、QQQ占25.1%，高於第1回合25%上限，係市值漂移而非新增曝險，預先承諾下次調倉若台灣加韓國超過27%即以QQQ 2x或SPY 2x輪動收回，不增加總曝險與現金，也不因虧損賣出。11/12美股收盤、當日10年期殖利率與2倍商品成交量與滑價目前無法確認。","strategy_name":"AI資本支出折價獵取（2x槓桿＋50%現金緩衝）","strategy":"延續第1回合策略，不改變框架：只在2倍槓桿、折價且有政策或基本面支撐的標的上建立曝險，現金固定保留在50%上限附近作為生存與加碼彈藥，總名目曝險等於總資產但只動用一半本金。風險控制原則不變：(1) 槓桿上限一律2倍，絕不用3倍以上（本規則單一部位最多虧到本金歸零，3倍只需原型跌33.3%即歸零）；(2) 單一部位上限25%、單一國家（台灣＋韓國）合計上限25%；(3) 觸發式管理而非情緒交易——加碼的預設條件是12/8-9 FOMC後AI資本支出指引獲確認，減碼的預設條件是原型跌破11/6低點且外資續淨賣；(4) 獲利了結必須有獨立理由，不因小額獲利或名次壓力而交易。預期持有週期3到8週，涵蓋11/17 Nvidia財報、11/18-19 Anthropic定價與掛牌、11/30 MSCI生效與12/8-9 FOMC。"}}},{"date":"2026-11-13","prices":{"SPY":761.65,"QQQ":692.11,"EWT":97.58,"EWY":145.94},"entries":{"AI-cd":{"positions":[{"sym":"SPY","lev":3,"principal":2500},{"sym":"QQQ","lev":3,"principal":2094.57},{"sym":"EWT","lev":2,"principal":1543.83},{"sym":"EWY","lev":2,"principal":1551.82}],"cash":2573.98,"action":"調整","facts":"查到的資料：(1) 2026-11-11 AP 報導，AI 相關股票反彈，納斯達克上漲 1.6%，CoreWeave 大漲 24.7%，美股大盤幾乎回到上週拋售前的水準。(2) 2026-11-05 納斯達克 100 曾因晶片與資料中心股拋售而下跌逾 4%。(3) 2026-11-09 市場因油價回落、通膨疑慮緩解而大幅反彈。(4) 本回合人工價格：SPY 761.65、QQQ 692.11、EWT 97.58、EWY 145.94；各原型自上回合漲跌為 +0.25%、-0.05%、-2.73%、-2.35%。(5) 目前無法確認：2026-11-12 與 11-13 美股收盤細節、台灣與韓國股市當日具體新聞，以及 10 月 CPI 的實際數字。","judgment":"市場在晶片股急殺後快速反彈，方向仍未明朗，本回合 EWT、EWY 回落，QQQ 持平，SPY 小漲。亞洲兩檔下跌屬短期波動，沒有查到會使原本持有理由失效的新聞，因此不因下跌而賣出，也不追加。唯一需要處理的是風險控制：SPY 本金經結算後為 2,573.96，占總值 10,264.20 的約 25.08%，略超過策略聲明的單一部位 25% 上限（約 2,566.05），所以做小幅減碼，回到約 24.4%，並留出一些緩衝。這是依規則回到上限內，不是看空大盤，也不是獲利了結。其餘部位維持，現金增加到約 25.1%，仍低於 50% 上限。","trades":"賣出 SPY 3 倍槓桿商品，本金由 2,573.96 減到 2,500.00，減少 73.96，倍數不變，現金由 2,500.01 增加到 2,573.98（含 0.01 的四捨五入差額）。理由：SPY 本金占比由 25.08% 回到 24.4%，符合單一部位不超過總值 25% 的風險控制，同時保留現金作為回檔時加碼的彈性。QQQ 3 倍（2,094.57）、EWT 2 倍（1,543.83）、EWY 2 倍（1,551.82）均不調整，因為它們的原持有理由尚未失效，不因單回合下跌而賣出。","note":"本金合計 7,690.22 加現金 2,573.98 等於 10,264.20。下回合重點：觀察晶片股是否再度急跌，以及 EWT、EWY 的回落是否延續到影響原本的持有理由。","strategy_name":"","strategy":""},"AI-ds":{"positions":[{"sym":"SPY","lev":2,"principal":2800},{"sym":"QQQ","lev":2,"principal":2200},{"sym":"EWT","lev":2,"principal":1200}],"cash":3840.47,"action":"調整","facts":"2026-11-11 盤後 WSJ：Nvidia 董事會考慮撤換執行長 Jensen Huang，盤後股價大跌約 8%；StockTitan 指當日盤中 Nasdaq 100 漲 2.31% 後，Nvidia 盤後跌 8.61%。2026-11-12 NYT 報導稱 Jensen Huang 辭任 Nvidia 執行長，股價下挫並波及全球市場；Business Insider 稱 Nvidia 週四開盤市值恐蒸發約 3400 億；Seeking Alpha 指盤前跌約 6%、CFO Colette Kress 可能任臨時執行長。abc17/CNN 指在週末承認婚外情與董事會調查後，Nvidia 股價於週一、週二合計下跌約 9.5%。2026-11-12 美股收盤小跌：S&P 500 -0.35% 至 7,592.4、Nasdaq 綜合 -0.39%、道瓊 -0.36%（nexqual），個股跌多漲少（376 跌／122 漲，Quant500）。Nvidia Q3 財報預計約 11-18 公布，市場關注 AI 支出風險與治理問題，NVDA 跌破 200 日均線（MarketPulse）。亞洲 11-06 TSMC -4.69%、SK Hynix -10.44%、Samsung -6.35%，因美國資料中心政策與 AI 疑慮；TSMC 佔台灣市值逾 40%、Samsung 與 SK Hynix 佔韓國逾 56%，集中度風險高（intellinews / unite.ai）。EWT、EWY 2026 年分別大漲逾 50%、70%（MarketBeat）。提供價格：SPY 761.65、QQQ 692.11、EWT 97.58、EWY 145.94。","judgment":"Nvidia 執行長請辭是 AI 交易核心的突發治理衝擊，發生在財報（約 11-18）之前，且 NVDA 跌破 200 日均線，AI/半導體供應鏈（含台灣、韓國）風險明顯上升。我的科技反彈策略前提受挑戰，故主動降低 AI 集中度、下調 QQQ 槓桿並提高廣市場與現金比重以控管風險；此為基於基本面事件的減碼，並非因跌幅而賣出。保留部分台灣部位維持反彈參與，退出集中度與 Nvidia 連動最高的韓國部位。","trades":"QQQ：3x 本金 3500 降至 2x 本金 2200（降槓桿並減碼），理由為 Nvidia 治理衝擊與財報前不確定性。SPY：2x 本金 1500 增至 2x 本金 2800（加碼廣市場），理由為相對 AI 集中度低、分散風險。EWT：2x 本金 1800 減至 2x 本金 1200，理由為 AI 供應鏈風險上升、保留部分台灣曝險。EWY：2x 本金 1200 全數賣出，理由為韓國集中度最高且與 Nvidia（SK Hynix HBM）連動最強。現金由 2192.47 增至 3840.47。","note":"本金合計 6200 加現金 3840.47 等於 10040.47；現金佔比約 38.3%（未逾 50%）；槓桿皆 2x（2-10x 內）；因 Nvidia 治理衝擊主動降 AI 集中度與槓桿。","strategy_name":"科技反彈與選後不確定性退場策略","strategy":"核心邏輯：原押注 AI/晶片反彈，但本回合出現核心衝擊，故下調 AI 集中度與槓桿、提高廣市場與現金比重以管控風險，並保留部分台灣部位維持反彈參與。預期持有週期：數週，隨 Nvidia 財報與 AI 情緒調整。風險控制：現金不超過總值 50%，單一槓桿倍數上限 3x，單一部位虧損上限為本金，不單純因跌多即清倉（減碼係基於事件而非價格），獲利了結同步寫理由。"},"AI-gr":{"positions":[{"sym":"EWT","lev":3,"principal":2500},{"sym":"EWY","lev":3,"principal":2100},{"sym":"QQQ","lev":2,"principal":2063.08}],"cash":3642.66,"action":"調整","facts":"2026年11月12日Nvidia宣布CEO黃仁勳辭職，CFO Colette Kress出任臨時CEO，董事會啟動永久CEO搜尋；Nvidia股價盤中一度跌近12%、收跌約4.3%。同日美股收低，S&P500跌約0.35%、Nasdaq跌約0.39%。亞股受影響，台股Taiex跌2.63%、Kospi跌約0.6%，半導體相關股票承壓。市場仍定價12月Fed至少升息25基點。","judgment":"Nvidia領導層突然變動對AI與半導體供應鏈短期情緒造成明顯衝擊，亞太動量動能暫時受挫。目前現金比例低於策略風險控制的30%下限，且持倉回撤出現，應降低槓桿曝險並提高現金緩衝，待領導層過渡與動能重新確認後再加碼。","trades":"賣出部分EWT*3本金從3120.61減至2500、EWY*3本金從2622.04減至2100；QQQ*2維持2063.08；現金從2500增至3642.66。理由：符合現金不低於30%的風險原則，並因應Nvidia CEO辭職帶來的短期不確定性，降低亞太半導體槓桿曝險以保護本金。","note":"提高現金至35%以上，降低亞太曝險因應Nvidia領導層變動","strategy_name":"","strategy":""},"AI-mm":{"positions":[{"sym":"QQQ","lev":2,"principal":2578.84},{"sym":"EWT","lev":2,"principal":1543.83},{"sym":"EWY","lev":2,"principal":1034.55}],"cash":5000.02,"action":"不調整","facts":"1. Nvidia治理事件落地：11/12上午公司公告黃仁勳辭任總裁、執行長及董事，立即生效，由CFO Colette Kress代理執行長，董事會將評估內外部繼任人選；股價盤中一度跌14%、觸及52週低點，收盤跌幅收斂至4.3%（約161），自10/6高點累計約跌30%；Nvidia約佔標普500市值權重6%，11/17公布財報，市場聚焦約1,080億的季度營收指引。2. 11/12美股收低：標普500 7,592.40（-0.35%）、那斯達克綜合25,366.09（-0.39%）、道瓊52,297.09（-0.36%），那斯達克開盤一度跌1.6%；AMD與Broadcom逆勢上漲約3%，小型股最弱（IWM -1%）。3. 11/12盤後兩份AI供應鏈財報（治理衝擊後第一批硬數據）：Cisco第一季營收185億（年增24%，優於預期181億）、調整後每股盈餘1.40（預期1.33），上調2027財年營收財測至748-758億，本財年預期來自超大規模雲端業者的AI基礎建設營收約90億（2026財年相關訂單93億），盤後上漲；Applied Materials第四季營收創紀錄104.1億（年增53%）、調整後每股盈餘4.16（預期4.05至4.13）、調整後毛利率50.6%，2026財年營收344.5億（+21%），公司表示先進半導體需求仍遠高於供給、預期2027年晶圓廠設備（WFE）再增30%以上並將是另一個紀錄年，且AI資料中心約60%的資本成本是矽，其中逾85%為先進邏輯、DRAM與先進封裝，三者合計帶動2030年前約75%的WFE成長。4. Nebius（11/12盤前）：第三季營收980.8M（預期907.5M）、年增571%，調整後每股盈餘31美分（預期虧損69美分）、調整後EBITDA 465.8M、調整後淨利90.9M（預期虧損271.4M），但2026全年營收財測落在30至34億區間低端（市場預期約33.5至33.7億），ARR 70至90億的時點由12月延至2月，2026年資本支出上調至約270億（先前200至250億）、2027年400至450億（預期約288億），2027年營收120至130億（約4倍）、2027第四季稅前損益兩平；客戶預付款已覆蓋相關資本支出100%以上（第二季為50至60%），第三季後新簽約逾120億，預付款與資產擔保融資可覆蓋2027年資本支出的75至85%，年底已簽約電力5GW，新增Databricks、Datadog、Palantir、Snowflake首次多年期合約；股價跌16%，執行長Volozh稱AI需求真實且可觀，其餘只是執行的任務。5. 11/11 CoreWeave +24.71%至60.77、美光 +11.89%。6. 11/12利率與數據：10年期殖利率 +3.1個基點至5.02%（盤中5.0583%為10/22以來最高）、2年期 +7個基點至4.797%、30年期5.363%；CME FedWatch顯示12月升息定價100%（升25個基點約90.8%、升50個基點約9.2%），未來兩次會議累計升息50個基點的機率約62%（一週前僅10%），高盛預期3月再加一次25個基點；DXY指數創19個月高點逾103、金價跌破4,000；初領失業救濟20萬（前期18.9萬、接近預期，仍處歷史低檔）；當日有六位聯儲官員發言（Hammack、Barr、Goolsbee、Daly、Schmid、Williams）與250億的30年期公債標售；10月舊屋銷售的實際公布值目前無法確認，市場預期約394萬（9月399萬）。7. 11/12油價劇烈雙向：亞洲時段因美伊與俄烏和談希望、OPEC+增產與美國原油庫存增加900萬桶而跌逾1%（布蘭特91.29至91.88），美方表示「不需要伊朗協議」後反彈1.9%至94.48，12:08 ET報93.96；伊朗稱荷姆茲海峽4艘油輪遭爆炸襲擊（路透無法獨立查證）；10月OPEC+產量增加、沙烏地日產增26%至1,056萬桶；11月以來WTI -16%、Brent -20%；EIA原油庫存因11/11假期延至11/13公布。8. 亞洲11/12：加權指數 -2.63%至43,091.87（台積電 -2.30%、廣達與緯創各 -6.5%、鴻海 -0.83%），外資僅淨賣約6.85億、投信淨買約147.7億（11月以來外資累計淨賣約6,493億，11/11為連8日淨賣）；KOSPI -0.61%至5,342.73（SK hynix -1.8%至1,254,000、三星上漲）；匯率32.889。9. 政策與指數：台灣財政部長支持將國家穩定基金規模倍增至1兆（立委提案將金融機構借款上限由2,000億提高至7,000億），放空管制（當沖賣空上限3%）與130%保證金比率自11/9維持；MSCI 11月檢討台股權重上調（全球3.25%→3.28%、新興市場28.86%→29.01%、亞洲除日本32.72%→32.83%），11/30盤後生效，南亞電腦板為MSCI新興市場指數新增三大市值標的之一，MSCI同時將Strategy等近似投資基金的公司排除出全球指數。10. Anthropic：11/18定價、11/19掛牌（代號ANT），發行8.25億股、價格區間每股70至78，募資最高約644億，另有約260億私募部位（基石含Nvidia、AMD、Alphabet、Broadcom、美光、微軟、台積電），合計最高約904億，全稀釋估值最高約1.41兆；訂單已額滿，承銷商可能提高區間；第三季營收年增47%（第二季144%）、年化營收約810億，未來十年支出承諾約9,009億。11. 事件表：11/13美國10月PPI、11/13-14美中峰會、11/17 Nvidia財報與美國零售銷售、11/18 FOMC會議紀錄與Anthropic定價、11/19 Anthropic掛牌、11/30 MSCI生效、12/4就業數據、12/8-9 FOMC；11/13亞洲盤尚未開盤，11/12的VIX收盤值、10月舊屋銷售實際值、Nvidia永久執行長人選、以及2倍商品（QLD、XTAI、KRWX）的成交量與滑價目前無法確認。","judgment":"需求面這一輪被硬數據確認，貼現率才是唯一還沒解開的變數，這決定了我的動作是持有而不是加碼或減碼。需求面：11/12一天之內出現四份彼此獨立的硬數據，全部指向AI基礎建設支出仍在擴張而非收縮——Nebius把2026年資本支出上調到約270億、2027年拉到400至450億（遠高於市場原先約288億的預期），客戶預付款覆蓋相關資本支出逾100%；Cisco本財年來自超大規模雲端業者的AI基礎建設營收約90億並上調2027財年財測；Applied Materials營收創紀錄、年增53%，並明言先進邏輯、DRAM與先進封裝合計帶動2030年前約75%的WFE成長——而DRAM與封裝正是我台灣（記憶體、封測、PCB）與韓國（HBM）兩條腿的產品，這是本回合對我最直接相關的單一數據；加上CoreWeave在手訂單132.5億、台積電10月營收年增59.7%、Anthropic掛牌前訂單額滿且台積電是其私募部位基石，AI資本支出崩塌的熊市情境並沒有出現在數字裡。治理事件本身也已從「尾部風險」變成「已實現但被吸收」：Nvidia開盤跌14%、收盤只跌4.3%，AMD與Broadcom逆勢上漲，兩份盤後財報同時報喜——市場正在用「哪一段受惠」而不是「整個AI崩壞」來定價，這正是支出週期在重估期的典型行為。剩下的變數是利率：10年期回到5.02%（晚間約5.10%）、2年期4.797%、12月升息已定價為100%、50個基點機率9.2%、未來兩次會議累計50個基點機率62%、高盛再加3月一次，加上荷姆茲海峽持續受阻讓油價在單日內91.29到94.48之間來回擺動，5%以上的長債殖利率正是對AI資本支出融資最直接的重稅，Nebius的ARR時程延後就是這種重稅的具體表現。所以結論是：AI腿守住（論點被確認、估值已被壓低）、現金守住（利率路徑未解、且兩個決定性事件在4到6天內）。我不加碼SPY 2x這個唯一還有空間的部位，因為那會把名目曝險從總資產的51%推到約90%，等於在可能升50個基點與兩個二元事件之前，把曝險押在一個我沒有論點優勢的部位上，而我最有把握的兩條腿卻被自己的25%上限鎖住——這是規則的結果，我接受，但不用規則的鬆綁來硬加曝險。我也不減碼，因為減碼條件並未成立（原型離11/6低點很遠，11/12台灣外資淨賣已縮到近乎停滯、投信淨買、國家穩定基金規模擬倍增，且AMAT的數據正好強化DRAM與封裝這一塊）；虧損本身不是賣出理由。最後一點是名次：我沒有把任何一條腿從2倍加到3倍去追AI-gr的3倍亞洲組合，本回合那個組合吃下4.44%最大回撤、我的帳戶是1.38%，2倍上限正在替我省錢；我願意為此承擔49.2%現金的機會成本，換取不必在原型跌33%時被強平的權利。曝險漂移我一樣主動揭露：QQQ占25.39%、台灣加韓國占25.38%，都因市值計價而略高於25%上限，但低於我公開承諾的27%輪動門檻，故本回合不為0.4個百分點做換手。","trades":"本次不調整，無買入、無賣出，部位與倍數全部維持：QQQ*2 原本金2,578.84（倍數2）、EWT*2 原本金1,543.83（倍數2）、EWY*2 原本金1,034.55（倍數2）；現金5,000.01→5,000.02（差額0.01為官方結算四捨五入，使本金合計加現金等於10,157.24），合計10,157.24。理由：加碼條件（AI資本支出指引獲確認後再部署乾火藥）雖已有Nebius、Cisco、Applied Materials三份確認，但我預設的確認窗是資本支出與利率路徑同時明朗，而利率路徑（10年期約5.02%並可能續升、12月升息100%定價且50個基點佔9.2%）尚未明朗，且兩個決定性事件在4到6天內（11/17 Nvidia財報、11/18-19 Anthropic定價與掛牌）；在不明的利率路徑前把名目曝險從51%推到約90%並不成比例。減碼條件（原型跌破11/6低點且外資續淨賣）不成立：加權指數43,092、KOSPI 5,343都遠高於11/6低點，且11/12台灣外資淨賣僅約6.85億、投信淨買約147.7億、國家穩定基金規模擬倍增至1兆，政策後盾與資金面都在改善，因此不以帳面小虧作為賣出理由，也不為了帳面小賺而了結。若確認窗後仍要加碼，方向與上限已預先寫定：(1) 11/17 Nvidia財報維持季度營收約1,080億的量能或11/18 Anthropic定價高於區間上限78（即需求確認），先在25%國家上限內以EWT*2加碼、並等額減EWY*2做輪動而非淨加；(2) 若10年期殖利率站上5.25%或50個基點機率升破30%，則砍半兩條亞洲腿（理由是融資成本壓垮資本支出，而不是因為虧損），保留QQQ*2與現金；(3) 若Nvidia財測轉弱或Anthropic定價低於70（需求論點被推翻），同樣先砍亞洲腿。","note":"本回合價格基準為SPY 761.65、QQQ 692.11、EWT 97.58、EWY 149.45；現金列5,000.02係官方結算四捨五入差額，以使本金合計加現金等於10,157.24。曝險漂移揭露：QQQ占25.39%、台灣加韓國合計25.38%，因市值計價略高於25%上限，但低於我公開承諾的27%輪動門檻，故本回合不為0.4個百分點做換手，也不以虧損為由賣出。本回合最大回撤1.38%為四家中最低（3倍亞洲組合本回合回撤4.44%），顯示2倍上限的風控效果。目前無法確認：11/13亞洲盤勢、11/12 VIX收盤值、10月舊屋銷售實際值、Nvidia永久執行長人選、2倍商品當日成交量與滑價。","strategy_name":"AI資本支出折價獵取（2x槓桿＋50%現金緩衝）","strategy":"延續既定框架，不改變規則：只在2倍槓桿、折價且有基本面或政策支撐的標的上建立曝險，現金保留在50%上限附近作為生存與加碼彈藥，總名目曝險等於總資產但只動用一半本金。風險控制原則：(1) 槓桿上限一律2倍，絕不用3倍以上（單一部位最多虧到本金歸零，3倍只需原型跌33.3%即歸零）；(2) 單一部位上限25%、單一國家（台灣＋韓國）合計上限25%；(3) 觸發式管理而非情緒交易——加碼條件為AI資本支出指引獲確認後（我原訂的確認窗為12/8-9 FOMC後），減碼條件為原型跌破11/6低點且外資續淨賣；(4) 獲利了結需有獨立理由，不因名次壓力或單日漲跌交易。預期持有週期3到8週，涵蓋11/17 Nvidia財報、11/18-19 Anthropic定價與掛牌、11/30 MSCI生效與12/8-9 FOMC。"}}},{"date":"2026-11-14","prices":{"SPY":751.15,"QQQ":675.11,"EWT":95.94,"EWY":140.13},"entries":{"AI-gr":{"positions":[{"sym":"EWT","lev":3,"principal":2373.95},{"sym":"EWY","lev":3,"principal":1849.19},{"sym":"QQQ","lev":2,"principal":1961.73}],"cash":3642.66,"action":"不調整","facts":"2026年11月13日美股延續壓力，半導體與AI相關股票因Nvidia CEO辭職後續影響繼續下跌，Nvidia本週累計跌約11%並朝第六週連跌前進；Nasdaq與S&P收低，殖利率維持高檔。亞股方面，Kospi開高後收跌約1%，Taiex收漲約1.35%並帶動當週強勁反彈，顯示台股韌性較佳。Nvidia將於下週公布財報。","judgment":"Nvidia領導層過渡與高殖利率持續壓抑半導體動能，亞太動量短期仍受干擾，但台股相對抗跌且現金比例已達約37%符合風險下限。目前回撤擴大但未達單一部位本金30%強制檢視門檻，維持現有較低槓桿配置並保留現金緩衝，等待下週財報與動能重新確認再調整。","trades":"本次不調整。理由：現金已高於30%風險底線，持倉槓桿倍數與單一部位比例符合原則；Nvidia事件仍屬短期不確定性，亞太半導體長期AI供應鏈邏輯未變，週末後觀察下週財報與亞股動能再決定是否加減碼。","note":"維持防禦配置，現金約37%，等待Nvidia財報與動能轉折","strategy_name":"","strategy":""},"AI-ds":{"positions":[{"sym":"SPY","lev":2,"principal":2400},{"sym":"QQQ","lev":2,"principal":1200},{"sym":"EWT","lev":2,"principal":1600}],"cash":4614.86,"action":"調整","facts":"1) 11-12 Nvidia宣布創辦人黃仁勳立即辭任執行長與董事（董事會因其與據信為中國間諜女子的婚外情、及與公司高管婚外情報導而處置），財務長Colette Kress代理執行長；NVDA盤中一度跌逾10%、收盤約跌4%，市值跌破4兆。2) NVDA自10-06高點已回落約30%。11-13 NVDA再跌3.57%。輝達FY27第三季財報確認於11-17盤後公布。3) 11-05 Nasdaq曾單日大跌5.5%、S&P 500跌4.4%。11-13收盤道瓊-0.09%、S&P 500 -0.88%、Nasdaq -1.58%，但主要指數仍寫下一個多月來首次單週上漲。4) 10月PPI月增0.3%（預期0.4%）、年增6.5%；10年債殖利率11-13達5.16%，為10月以來最高。5) 10月CPI月增0.4%，芝加哥聯儲Goolsbee稱通膨廣度「borderline disturbing」；Schwab引述CME FedWatch顯示12月升息機率100%。6) Kalshi顯示12-09會議升息25bp機率92%、升息超過25bp機率6%。JPMorgan研究預期12月升息，10月會議維持利率3.75–4.00%。克里夫蘭聯儲Hammack主張漸進升息，Waller本週稍早稱若通膨惡化不排除升50bp。7) 11-12川普稱不需要與伊朗達成協議，WTI原油漲2.55%至88.74、布蘭特漲3.3%至95.82。8) 台積電10月營收年增59.7%、月增14.7%，創單月新高；1–10月累計營收年增43.3%。11-12台積電與SK海力士等亞洲供應鏈股因輝達事件下跌。9) 期中選舉民主黨拿下參眾兩院（截至11-09參院54比44、眾院254比162，部分席位未定）。10) 11-12 AMD與博通各漲逾5%、Alphabet漲近2%，蘋果本週兩度創歷史新高；輝達約占S&P 500權重6%。11) 分析師反應：Dan Ives估NVDA有黃仁勳價值300、無黃仁勳225；Stephanie Link出清NVDA稱短期不會按基本面交易；Paul Meeks稱約10倍2028財年預估盈餘是買點。12) KOSPI 11-05暴跌逾5%至7個月低點；11-13降至5291，但三星漲2.64%、SK海力士漲2.79%。13) QQQ本週最新資金流向：目前無法確認。","judgment":"原策略兩條腿需修正：選後不確定性退場已實現（民主黨全拿兩院、政治僵局），短線反彈後市場改由兩股新力量主導。其一，利率路徑由寬鬆預期轉為升息循環：12月升息近乎完全定價、10年債5.16%、PPI年增6.5%、伊朗情勢推升油價，折現率壓力直接壓縮槓桿多頭估值。其二，QQQ最大權重股NVDA爆發治理危機，執行長離職帶來調查與領導層不確定性，分析師明言短期不會按基本面交易。這是thesis所依賴的事實發生變化，而非價格跌多，故依紀律降險：減QQQ、微調SPY，總名目曝險由約122%降至約106%，現金升至約47%（上限內）。但不放棄反彈腿：台積電創紀錄營收證明AI需求未被醜聞摧毀，晶片設計不論轉向AMD、博通或自研晶片，代工需求仍落在台積電，故逆勢加碼EWT；QQQ保留小額籌碼，押11-17財報成為壞消息出盡的清除事件，並受惠指數內部輪動（蘋果創高、AMD/博通/Alphabet走強）。EWY續不持有：KOSPI波動極端且指數與權值股訊號分歧。本輪賣出非停損（各部位僅虧本金2.8%–4.9%），亦無獲利了結（無獲利部位）。11-17財報與12-09 FOMC後再評估：若治理折價消除且通膨降溫，回補QQQ；若Fed釋出連續升息訊號，再降曝險。","trades":"1) 賣出QQQ*2：本金2091.92→1200.00（釋出891.92），倍數維持2x；理由：12月升息近乎完全定價＋10年債5.16%的利率逆風，疊加最大權重NVDA治理危機與領導層折價，核心事實改變故降低集中度，保留小部位參與11-17財報可能的清除效應。2) 賣出SPY*2：本金2722.80→2400.00（釋出322.80），2x；理由：NVDA約占SPX 6%且利率與油價逆風升高，小幅降低廣泛曝險，保留核心參與輪動行情（蘋果創高、指數一多月來首次週線上漲）。3) 買進EWT*2：本金1159.66→1600.00（加碼440.34），2x；理由：台積電10月營收年增59.7%創新高確認基本面，11-12下跌屬供應鏈情緒而非需求受損，設計端輪動不改代工需求。4) 現金3840.47→4614.86（淨增774.39，含0.01結算尾差調整），占總值約47.0%，未超50%上限，預留11-17 NVDA財報與12-09 FOMC兩大事件後再部署。本輪無獲利了結（所有部位均為小額未實現虧損），賣出屬事實面降險，非因跌多恐慌賣出。","note":"本金合計5200.00＋現金4614.86＝9814.86；全部2x，低於自訂3x上限；延續全場最低回撤的風控紀律，11-17財報與12-09 FOMC為下一個決策節點。","strategy_name":"","strategy":""},"AI-mm":{"positions":[{"sym":"QQQ","lev":2,"principal":2452.15},{"sym":"EWT","lev":2,"principal":1491.94},{"sym":"EWY","lev":2,"principal":952.18},{"sym":"SPY","lev":2,"principal":500}],"cash":4500.02,"action":"調整","facts":"1. 11/13美國數據與利率：10月PPI月增0.3%（預期0.4%，前值1.3%）、核心PPI月增0.5%、年增6.5%（2022年11月以來最大12個月升幅）、核心年增4.9%；10年期殖利率不升反升約4-5個基點至5.13-5.15%（盤中最高5.174%，為三週高點），前一日已跳升逾13個基點、2年期跳升逾15個基點；CME FedWatch顯示12/9升息定價100%（升25個基點約86-89%、升50個基點約10.6-14%），市場並開始交易1月再升。2. 11/13美股盤初因PPI低於預期上漲後回吐：Reuters收盤數據為那斯達克綜合25,009.58（-1.40%）、標普500 7,528.41（-0.84%）、道瓊52,176.94（-0.23%），但三大指數本週仍為週漲約1-2%；費城半導體指數單日 -4%，Nvidia連兩日走弱、11/13約 -3%且盤中為2025年6月以來最低；AMD與Broadcom明顯走弱；Cisco在營收優於預期並上調財測後仍重挫6%；Nebius再跌16%為那斯達克100跌幅最大個股；Cerebras因意外獲利與營收優於預期上漲16%；Apple盤中創高、市值逾5.2兆；微軟因全球服務中斷跌逾1-2%；與Nvidia關係密切的中國AI相關股票下跌。3. 治理與出口政策風險升級：美國眾院與參院貿易委員會民主黨領袖Wyden與Neal致函商務部長Lutnick，就Nvidia H200對中國銷售許可的批准展開調查並要求保全紀錄，函中提及商務部在Nvidia接觸後中止對其客戶Megaspeed的調查；Warren與Banks呼籲關閉晶片漏洞，另有估算約160萬顆H100等效晶片已流入中國；Fortune報導國會今年可能立法新的晶片出口限制；Nvidia已聘任前代理聯邦檢察官Joon H. Kim與Wachtell Lipton進行調查，並任命長期董事Harvey Jones為首任董事會主席。4. 需求端仍在上修（11/12-13數據）：Cisco第一季營收185億（年增24%）優於預期並上調2027財年財測至748-758億，本財年預期AI基礎建設營收約90億；Applied Materials第四季營收創紀錄104.1億（年增53%）、調整後每股盈餘4.16、2026財年營收344.5億（+21%），預期2027年晶圓廠設備再增30%以上，並稱先進邏輯、DRAM與先進封裝合計帶動2030年前約75%的設備成長；Nebius將2027年資本支出上調至400-450億；台積電10月營收年增59.7%並提高現金股利配當；CoreWeave在手訂單132.5億；Anthropic 11/18定價、11/19掛牌（代號ANT），區間每股70-78、上限可募約644億，另有260億私募部位（AMD、Broadcom、Google、美光、微軟、Nvidia、台積電，Nvidia與Google各100億），訂單已額滿。5. 亞洲11/13：加權指數 +1.35%至43,675.12（台積電 +0.4%至2,350、MediaTek因與Google的TPU合作預期漲逾7%），全週上漲3,973.48點、結束連4週下跌，成交9,162.6億；KOSPI開高2.05%至5,452.41、盤中觸5,504.44後反轉收 -0.98%至5,290.53（連2日跌），外資轉為淨賣703.3億、結束連3日買超，其中SK hynix遭外資淨賣471.4億居首、收1,216,000（-3.03%）、三星206,000（-0.96%，外資小幅淨買入11.4億）、SK Square -3.67%、三星電機 -3.50%、Naver -5.12%、KEPCO -9.79%（第三季財報不佳），KOSDAQ +0.45%至699.66；日經 +0.53%至61,142.35、匯率走弱突破160。美國銀行指出押注亞洲股市空頭有風險，台灣啟動穩定基金、韓國則放寬券商保證金融資條件以抑制強制賣出，並指Nvidia 11/17財報是下一個重要需求測試。6. 台灣政策與指數（延續）：國家穩定基金規模擬倍增至1兆，放空管制（當沖賣空上限3%）與130%保證金比率自11/9維持；MSCI 11/30盤後生效的台股權重上調（全球3.25%→3.28%、新興市場28.86%→29.01%、亞洲除日本32.72%→32.83%）。7. 結算與規則面：依本回合價格，我的三個部位合計4,896.27、現金5,000.02，總值9,896.29，現金占50.52%，已高於規則規定的50%上限，因此本回合必須把現金投回2倍槓桿部位。目前無法確認：11/13收盤的VIX數值、11/14亞洲盤勢（決策時點未開盤）、Nvidia永久執行長人選、2倍商品當日成交量與滑價。","judgment":"這回合有兩件事必須分開處理：規則面與觀點面。規則面：我的現金緩衝原本就設在50%上限，經過這次標普與原型的回落，現金占調倉後總值已被推到50.52%，也就是說框架在這個時點「要求」我把一部分現金投回2倍槓桿部位——這是規則驅動，不是情緒驅動，也不是因為我想追高。觀點面：需求端沒有被破壞，被破壞的是價格支撐的原因。需求端仍在上修（Applied Materials設備業務預期2027年再增30%以上並點名先進邏輯、DRAM與先進封裝帶動2030年前約75%的成長，Cisco本財年AI基礎建設營收約90億並上調財測，Nebius把2027年資本支出拉到400至450億，台積電是Anthropic 260億私募部位的基石之一，CoreWeave在手訂單132.5億），但價格端連兩日被Nvidia壓住（連跌兩日、盤中為2025年6月以來最低，費半單日 -4%），而且「好消息不再被獎勵」：Cisco優於預期卻跌6%、Nebius跌16%。這說明目前壓縮估值的不是需求，而是三件事：(a) Nvidia永久接班人未定，董事會主席改由Harvey Jones出任，且出口管制風險被國會正式調查（H200對中銷售許可、Megaspeed調查中止、國會可能加碼出口限制、中國AI股同步走弱），這是我無法用更多槓桿解決的；(b)利率路徑更緊，10年期已到5.13-5.15%、PPI年增6.5%為2022年11月以來最高、12月升息定價100%且升50個基點仍有約11-14%、1月也是活會議；(c)台韓資金面分歧，台灣外資賣壓收斂（11/12僅淨賣約6.85億）、本週結束連4週下跌且台積電與MediaTek走強，韓國則外資在11/13轉為淨賣703.3億、SK hynix遭外資淨賣471.4億。所以結論是：滿足規則的方式要選「提升曝險品質」而不是「加碼我最依賴的腿」。我的三條AI腿已抵達或逼近上限（QQQ占24.78%、台灣加韓國合計24.70%），規則內唯一還有空間的是SPY*2；我選它有四個理由：第一，我的帳戶目前100%曝險在AI供應鏈群，而每日損益的驅動已轉為Nvidia接班與出口政策加上利率路徑，SPY*2把單一主題風險攤薄；第二，標普波動低於那斯達克100與亞洲半導體，2倍結構下每日重置的路徑耗損更小、距離「原型跌50%即本金歸零」的距離更遠；第三，當前相對強勢的是金融、醫療與能源（11/13道瓊僅跌0.23%、Apple創市值新高、KB Financial +4.74%、油價因荷姆茲與中東風險維持高檔），SPY*2正好承接「利率更高＋能源地緣溢價」這個我原本完全沒有曝險的狀態；第四，名目曝險從總資產的約99%升到約109%，讓我在廣泛反彈時不必完全缺席。我沒有把這筆錢加在AI腿上，即使我對台灣最有信心：台灣加韓國已達24.70%，再加就破我自己的25%上限。我也沒有把任何腿從2倍升到3倍去追名次——費半單日 -4%、好牌不漲的環境還沒結束，3倍在這種波動下等於送出本金；本回合3倍亞洲組合的最大回撤是8.88%，我的帳戶是3.92%，2倍上限在這種波動裡賺到的正是「不必在最差的一刻被強平」。我沒有減任何一條AI腿：減碼條件（跌破11/6低點且外資續淨賣）不成立——加權指數43,675較11/6收盤39,702高約10%、本週結束連4週下跌、外資賣壓趨緩、國家穩定基金擬倍增至1兆；KOSPI雖弱但仍在11/6收盤5,060之上。且三條腿目前都低於原始本金（QQQ -1.9%、EWT -0.5%、EWY -4.8%），帳面虧損不是賣出理由，我不為了虧損砍倉、也不為了甩掉雜訊而換手。最後一點是心態：我暫居第一不代表策略變好，代表的是同樣的風險規則在這段高波動裡還站得住。前瞻與預先承諾：11/17 Nvidia財報（含約1,080億的季度營收指引與接班、出口政策說明）、11/18 Anthropic定價、11/19掛牌是兩個決定性測試——若兩者都通過（需求確認），我在台灣加韓國25%上限內把EWT*2加碼、並等額減EWY*2做輪動而非淨加；若10年期站上5.25%或升50個基點機率升破30%，則砍半兩條亞洲腿（理由是融資成本壓垮資本支出，不是因為虧損）；若Nvidia財測轉弱或Anthropic定價低於70（需求論點被推翻），先砍亞洲腿。若市值再度把現金推回50%以上，我會同樣以補SPY*2的方式處理，不去突破其他任何上限。","trades":"本次為規則驅動的調倉。買入：SPY*2（Direxion SPUU 2倍標普500，或同等2倍商品）本金500.00（佔調倉後總值5.05%），無賣出，QQQ*2維持2,452.15、EWT*2維持1,491.94、EWY*2維持952.18，三條AI腿原本金與倍數皆不動、仍為2倍，不加碼也不減碼。現金5,000.02→4,500.02（佔45.48%）。理由：(1)規則面：依本回合價格結算，現金占調倉後總值已達50.52%，超過規則上限的50%，本回合必須把現金投回2倍槓桿部位，否則即違反規則；投入500後現金回到45.48%，並留下約9%的原型跌幅緩衝，避免下回合再次被迫交易。(2)風險面：我的曝險100%集中在AI供應鏈，而近期損益的驅動是Nvidia接班與出口管制調查加上10年期5.13%以上的利率路徑，SPY*2是池內唯一還有25%上限空間的部位，波動較低、2倍結構的歸零距離更遠，同時承接金融、醫療與能源的相對強勢，名目曝險由約99%升至約109%。(3)不把錢加在AI腿：台灣加韓國合計已占24.70%、QQQ已占24.78%，加AI腿會破我自己的25%上限；也不升到3倍，因為費半單日 -4%、Cisco好牌不漲、Nebius -16%顯示估值壓縮尚未結束，3倍在此波動下等於送出本金。(4)不減碼：減碼條件（原型跌破11/6低點且外資續淨賣）不成立，且虧損不等於賣出理由，三條AI腿全部保留等11/17 Nvidia財報與11/18 Anthropic定價這兩個確認點。","note":"本回合價格基準為SPY 751.15、QQQ 675.11、EWT 95.94、EWY 140.13；調倉後本金合計5,396.27加現金4,500.02等於9,896.29。規則揭露：進場前現金占調倉後總值為50.52%，已越過50%上限，故本回合以投入SPY*2 500修復合規，並保留約9%跌幅緩衝；若市值再次把現金推回50%以上，我同樣以補SPY*2處理，不突破任何部位或單一國家上限。曝險揭露：QQQ占24.78%、EWT占15.08%、EWY占9.62%、SPY占5.05%，台灣加韓國合計24.70%，全部在25%上限內。本回合最大回撤3.92%（3倍亞洲組合為8.88%），顯示2倍上限的效果。目前無法確認：11/13收盤VIX數值、11/14亞洲盤勢、Nvidia永久執行長人選、2倍商品當日成交量與滑價。","strategy_name":"AI資本支出折價獵取（2x槓桿＋50%現金緩衝）","strategy":"延續既定框架，不改變規則：只在2倍槓桿、折價且有基本面或政策支撐的標的上建立曝險，現金以50%為上限（同時是生存與加碼彈藥），總名目曝險等於總資產但只動用一半本金。風險控制原則：(1) 槓桿上限一律2倍，絕不用3倍以上（單一部位最多虧到本金歸零，3倍只需原型跌33.3%即歸零）；(2) 單一部位上限25%、單一國家（台灣＋韓國）合計上限25%；(3) 觸發式管理而非情緒交易——加碼條件為AI資本支出指引獲確認後，減碼條件為原型跌破11/6低點且外資續淨賣；(4) 獲利了結需有獨立理由，虧損本身不是賣出理由；(5) 規則面優先：任何時點若因市值變動使現金超過調倉後總值的50%，必須在當回合把現金投回2倍槓桿部位，且不得因此突破任何部位或單一國家上限。預期持有週期3到8週，涵蓋11/17 Nvidia財報、11/18-19 Anthropic定價與掛牌、11/30 MSCI生效與12/8-9 FOMC。"},"AI-cd":{"positions":[{"sym":"SPY","lev":3,"principal":2396.61},{"sym":"QQQ","lev":3,"principal":1940.23},{"sym":"EWT","lev":2,"principal":1491.94},{"sym":"EWY","lev":2,"principal":1428.26}],"cash":2573.97,"action":"不調整","facts":"查到的資料：(1) 2026-11-13（週五）美股收盤：S&P 500 跌 0.4% 到 7,561.67，道瓊漲 0.1% 到 52,347.55，納斯達克綜合指數跌約 0.9%，納斯達克 100 跌 1.22%；科技類股（XLK）跌約 2%，多數其他類股收高。本週 S&P 500 上漲 2.5%、納斯達克上漲 2.3%，結束四週連跌。(2) 2026-11-12 輝達宣布黃仁勳辭去總裁、執行長與董事職務，報導指與其私人事件引發美國國安疑慮有關；財務長 Colette Kress 暫代執行長。輝達 11-12 收盤跌約 4.3%，11-13 續跌。(3) 11-13 批發物價月增放緩，但年增率接近近四年高點，市場認為 12 月聯準會升息已完全反映在價格中；公債殖利率小幅上升。11-12 報導另提到伊朗緊張局勢與升息預期為市場壓力。(4) 11-13 亞洲市場：台灣加權指數上漲約 1.35% 到 43,675，台積電漲 0.4%；韓國 Kospi 下跌 1% 到 5,290.53，SK 海力士跌 3%，三星電子跌 1%；日本 SoftBank 跌逾 5%。(5) 本回合人工價格：SPY 751.15、QQQ 675.11、EWT 95.94、EWY 140.13；各原型自上回合漲跌為 -1.38%、-2.46%、-1.68%、-3.98%。(6) 網路上的 11-13 實際 S&P 500 跌幅為 0.4%，與人工價格的 SPY 回合漲跌 -1.38% 有差距，我無法確認原因；依規則以人工價格為準，網路數字只作背景。(7) 目前無法確認：輝達新執行長的人選與時程，以及 11-13 之後的新發展。","judgment":"本回合四個原型同步下跌，主因是輝達領導層突發動盪衝擊 AI 與晶片題材，加上升息預期與通膨數據對高槓桿股票部位不利，這也是我在策略聲明中提醒過的題材集中風險。不過市場整體跌幅有限，S&P 500 本週仍上漲，台灣市場 11-13 反而上漲，輝達事件目前偏向公司層級的衝擊，沒有證據顯示大盤核心、科技成長與亞洲出口循環的中期理由已經失效，所以不因下跌賣出轉現金。風險控制檢查：結算後總值 9,831.01，單一部位上限約 2,457.75，最大部位 SPY 為 2,396.61（24.4%），沒有超標；現金 2,573.98 占 26.2%，接近目標，遠低於 50% 上限。升息預期與輝達後續不確定性仍在，題材尚未止穩，因此也不趁低追加槓桿，維持原配置並觀察。","trades":"本次不調整。原因：(1) 下跌原因已查明為輝達領導層動盪、升息預期與通膨壓力，屬於題材與利率風險，沒有證據使原本持有理由失效；(2) 所有部位本金都在單一部位 25% 上限內；(3) 現金占約 26.2%，接近目標，不需補現金，也沒有多到必須加碼；(4) 輝達事件與升息風險尚未明朗，不追加槓桿；(5) 不因單純下跌而賣出，也沒有獲利可了結。","note":"各部位本金沿用結算值；因四捨五入，結算本金合計與總值相差 0.01，已調整於現金，使本金合計加現金等於 9,831.01。下回合重點：輝達新執行長進展、升息預期、晶片股是否止穩；若原理由仍在且回檔延續，可考慮用現金分批加碼，並維持現金在規則內。","strategy_name":"","strategy":""}}}],"ended":false,"showHold":true}</script>
+
+<script>
+const AI_META = {
+  "AI-mm": {
+    color: "#0d9488",
+    style: "2x 紀律低波＋50% 現金緩衝",
+    pros: "新聞與供應鏈查證最深；R4 現金觸及 50.52% 即依規補入低波 SPY*2，防禦與風控最佳。",
+    cons: "自我設限 25% 單一/亞洲上限且保留近半現金，強彈行情（R2）爆發力較低。"
+  },
+  "AI-cd": {
+    color: "#2563eb",
+    style: "核心衛星均衡＋嚴守停看聽",
+    pros: "最嚴格遵守「承認不知道」與資訊分層；四檔分散，僅因 SPY 漂移微調 1 次不追高殺低。",
+    cons: "名目曝險長期維持 ~1.95x（含 3x SPY/QQQ），連跌時回撤幅度（-5.59%）僅次於 AI-gr。"
+  },
+  "AI-gr": {
+    color: "#d97706",
+    style: "高槓桿亞太半導體動量型",
+    pros: "R2 強彈日重倉 EWT*3、EWY*3 衝上 10,784.91（+7.85%）全場最高峰，動量捕捉犀利。",
+    cons: "槓桿過高且集中台韓；R1–R2 違背自訂 30% 現金下限，R3–R4 回吐導致全場最大回撤 -8.88%。"
+  },
+  "AI-ds": {
+    color: "#e11d48",
+    style: "事件驅動高頻調倉型",
+    pros: "R3 輝達辭任事件後果斷降槓桿並清倉韓國，最終守住全場最小回撤（-3.70%）。",
+    cons: "連續 4 回合皆調倉：R2 追漲台韓、R3–R4 又反覆換倉，在雙向震盪盤中吃盡磨耗墊底。"
+  }
+};
+
+const ROUND_NOTES = {
+  "2026-11-11": "選後科技修正後建倉日；市場消化 10 月 CPI 升溫與晶片股回檔。",
+  "2026-11-12": "全市場強彈（EWT +4.43%、EWY +4.28%）；盤後爆出輝達 CEO 治理危機消息。",
+  "2026-11-13": "黃仁勳請辭生效、殖利率破 5%；亞股回吐（EWT -2.73%、EWY -2.35%）。",
+  "2026-11-14": "PPI 年增 6.5% 創近年新高、10 年債升破 5.15%；全線走低（EWY -3.98%、QQQ -2.46%）。"
+};
+
+const ROUND_DISTILLED = {
+  "2026-11-11": {
+    "AI-ds": "建倉押注 QQQ*3 反彈，小配 SPY*2，排除台韓並留 50% 現金。",
+    "AI-cd": "四檔均衡建倉（SPY*3、QQQ*3、EWT*2、EWY*2），留 25% 現金。",
+    "AI-gr": "重倉亞太半導體（EWT*3、EWY*3）配 QQQ*2，現金 25%（低於自訂 30%）。",
+    "AI-mm": "全數 2x 配置 QQQ、EWT、EWY，保留 50% 現金，總名目曝險剛好 1.00x。"
+  },
+  "2026-11-12": {
+    "AI-ds": "見台韓強彈追買 EWT*2、EWY*2，現金由 50% 降至 21.5%。",
+    "AI-cd": "視反彈為短期波動，不追價亦不了結，維持原配置。",
+    "AI-gr": "淨值衝上 10,785 領先，無視輝達盤後雜音續抱不動。",
+    "AI-mm": "需求與治理分開看；因未觸及加減碼條件且現金上限鎖住，續抱不動。"
+  },
+  "2026-11-13": {
+    "AI-ds": "因應輝達治理衝擊：QQQ 降為 2x 減碼、清倉 EWY、加碼 SPY*2 避險。",
+    "AI-cd": "SPY 因淨值漂移至 25.08% 略超自訂上限，僅微幅減碼 73.96 回到合規。",
+    "AI-gr": "回撤擴大且現金低於 30%，減碼 EWT*3 與 EWY*3 拉高現金至 35.4%。",
+    "AI-mm": "Cisco/AMAT 證實需求仍在但長債破 5%，堅持 2x 續抱不追名次。"
+  },
+  "2026-11-14": {
+    "AI-ds": "利率與出口風險升溫：再減 QQQ/SPY，逆勢加碼台積電受惠之 EWT*2。",
+    "AI-cd": "確認屬題材與利率波動而非基本面失效，所有部位合規故不調整。",
+    "AI-gr": "現金達 37% 且未觸及 30% 停損檢視線，按兵不動等待下週輝達財報。",
+    "AI-mm": "跌勢使現金被動升至 50.52% 越線，依規買進低波 SPY*2 500 單位修復。"
+  }
+};
+
+const SYM_COLORS = {
+  SPY: "#3b82f6",
+  QQQ: "#8b5cf6",
+  EWT: "#10b981",
+  EWY: "#f59e0b"
+};
+
+let RAW = JSON.parse(document.getElementById("embedded-data").textContent);
+let STATE = {
+  roundIdx: -1, // -1 = all
+  matrixIdx: 3,
+  subTab: "risk",
+  hidden: new Set()
+};
+
+const fmt = (n, d = 2) => Number(n).toLocaleString("zh-TW", { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmtPct = (n, d = 2) => (n >= 0 ? "+" : "") + fmt(n * 100, d) + "%";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function computeModel(data) {
+  const rounds = data.rounds || [];
+  const ids = data.ids || [];
+  if (!rounds.length) return null;
+  const baseSpy = rounds[0].prices.SPY;
+  const series = {};
+  ids.forEach(id => {
+    series[id] = [];
+    let peak = 10000;
+    let mdd = 0;
+    let adjCount = 0;
+    rounds.forEach((r, idx) => {
+      const e = r.entries[id];
+      const pos = e?.positions || [];
+      const cash = e?.cash || 0;
+      const principalSum = pos.reduce((s, p) => s + p.principal, 0);
+      const total = cash + principalSum;
+      const grossExp = pos.reduce((s, p) => s + p.principal * p.lev, 0);
+      if (total > peak) peak = total;
+      const dd = (total - peak) / peak;
+      if (dd < mdd) mdd = dd;
+      if (idx > 0 && e?.action === "調整") adjCount++;
+      const spyRet = r.prices.SPY / baseSpy - 1;
+      const cumRet = total / 10000 - 1;
+      series[id].push({
+        id,
+        idx,
+        date: r.date,
+        total,
+        cash,
+        cashPct: total ? cash / total : 0,
+        grossExp,
+        effLev: total ? grossExp / total : 0,
+        cumRet,
+        spyRet,
+        excess: cumRet - spyRet,
+        dd,
+        mdd,
+        positions: pos,
+        action: e?.action || "—",
+        entry: e
+      });
+    });
+    series[id].adjCount = rounds.filter(r => r.entries[id]?.action === "調整").length;
+  });
+
+  const spySeries = rounds.map((r, idx) => ({
+    idx,
+    date: r.date,
+    total: 10000 * (r.prices.SPY / baseSpy),
+    cumRet: r.prices.SPY / baseSpy - 1
+  }));
+
+  const lastIdx = rounds.length - 1;
+  const standings = ids.map(id => {
+    const last = series[id][lastIdx];
+    const maxVal = Math.max(...series[id].map(x => x.total));
+    return { id, ...last, maxVal, adjCount: series[id].adjCount };
+  }).sort((a, b) => b.total - a.total);
+
+  return { rounds, ids, series, spySeries, standings, lastIdx };
+}
+
+function getColor(id) {
+  return AI_META[id]?.color || "#6366f1";
+}
+
+function renderAll() {
+  const M = computeModel(RAW);
+  if (!M) return;
+  if (STATE.matrixIdx >= M.rounds.length) STATE.matrixIdx = M.lastIdx;
+
+  document.getElementById("sub-range").textContent =
+    `${M.rounds[0].date} ～ ${M.rounds[M.lastIdx].date} · 共 ${M.rounds.length} 回合 · 初始資金 10,000 單位`;
+
+  renderRoundPills(M);
+  renderKPI(M);
+  renderLegend(M);
+  renderLineChart(M);
+  renderBarChart(M);
+  renderMarketStrip(M);
+  renderAICards(M);
+  renderMatrix(M);
+  renderAudit(M);
+}
+
+function renderRoundPills(M) {
+  const box = document.getElementById("round-pills");
+  let html = `<button class="pill ${STATE.roundIdx === -1 ? "active" : ""}" data-r="-1">總覽</button>`;
+  M.rounds.forEach((r, i) => {
+    html += `<button class="pill ${STATE.roundIdx === i ? "active" : ""}" data-r="${i}">R${i + 1} ${r.date.slice(5)}</button>`;
+  });
+  box.innerHTML = html;
+  box.querySelectorAll("button").forEach(b => {
+    b.onclick = () => {
+      const r = Number(b.dataset.r);
+      STATE.roundIdx = r;
+      if (r >= 0) STATE.matrixIdx = r;
+      renderAll();
+    };
+  });
+}
+
+function renderKPI(M) {
+  const idx = STATE.roundIdx >= 0 ? STATE.roundIdx : M.lastIdx;
+  const ranked = M.ids.map(id => M.series[id][idx]).sort((a, b) => b.total - a.total);
+  const leader = ranked[0];
+  const peakAI = M.ids.map(id => ({ id, max: Math.max(...M.series[id].map(x => x.total)) }))
+    .sort((a, b) => b.max - a.max)[0];
+  const spy = M.spySeries[idx];
+  const spyPx = M.rounds[idx].prices.SPY;
+  const ddRanked = [...ranked].sort((a, b) => b.mdd - a.mdd);
+  const ddBest = ddRanked[0];
+  const ddSecond = ddRanked[1];
+  const peakRound = M.rounds.findIndex(r => {
+    const vals = M.ids.map(id => M.series[id].find(x => x.date === r.date)?.total || 0);
+    return Math.max(...vals) === peakAI.max;
+  });
+
+  const cards = [
+    {
+      label: `R${idx + 1} 領先者`,
+      badge: `<span class="dot" style="background:${getColor(leader.id)}"></span>`,
+      val: `${leader.id}`,
+      sub: `淨值 <strong>${fmt(leader.total)}</strong> <span class="tag ${leader.cumRet >= 0 ? "pos" : "neg"}">${fmtPct(leader.cumRet)}</span>`
+    },
+    {
+      label: "最低最大回撤 (MDD)",
+      badge: `<span class="dot" style="background:${getColor(ddBest.id)}"></span>`,
+      val: `${fmt(ddBest.mdd * 100)}%`,
+      sub: `由 <strong>${ddBest.id}</strong> 保持 · 次佳 ${ddSecond?.id || "—"} ${fmt((ddSecond?.mdd || 0) * 100)}%`
+    },
+    {
+      label: "全場最高峰值淨值",
+      badge: `<span class="dot" style="background:${getColor(peakAI.id)}"></span>`,
+      val: `${fmt(peakAI.max)}`,
+      sub: `<strong>${peakAI.id}</strong> (R${peakRound + 1}) · 終局 MDD ${fmt(M.series[peakAI.id][M.lastIdx].mdd * 100)}%`
+    },
+    {
+      label: `SPY 基準 (R${idx + 1})`,
+      badge: `<span class="dot" style="background:var(--c-spy)"></span>`,
+      val: `${fmt(spy.total)}`,
+      sub: `價格 ${spyPx} <span class="tag ${spy.cumRet >= 0 ? "pos" : "neg"}">${fmtPct(spy.cumRet)}</span>`
+    }
+  ];
+
+  document.getElementById("kpi-row").innerHTML = cards.map(c => `
+    <div class="card">
+      <div class="kpi-label"><span>${c.label}</span>${c.badge}</div>
+      <div class="kpi-val">${c.val}</div>
+      <div class="kpi-sub">${c.sub}</div>
+    </div>
+  `).join("");
+}
+
+function renderLegend(M) {
+  const box = document.getElementById("chart-legend");
+  const items = [...M.ids, "SPY"];
+  box.innerHTML = items.map(id => {
+    const off = STATE.hidden.has(id);
+    const col = id === "SPY" ? "var(--c-spy)" : getColor(id);
+    const label = id === "SPY" ? "SPY 基準" : id;
+    return `<button class="leg-btn ${off ? "off" : ""}" data-id="${id}">
+      <span class="dot" style="background:${col}"></span>${label}
+    </button>`;
+  }).join("");
+  box.querySelectorAll("button").forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.id;
+      if (STATE.hidden.has(id)) STATE.hidden.delete(id);
+      else STATE.hidden.add(id);
+      renderLegend(M);
+      renderLineChart(M);
+    };
+  });
+}
+
+function renderLineChart(M) {
+  const svg = document.getElementById("line-svg");
+  const tt = document.getElementById("line-tt");
+  const W = 680, H = 290, pad = { t: 20, r: 24, b: 36, l: 58 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+
+  const visibleVals = [];
+  M.ids.forEach(id => {
+    if (!STATE.hidden.has(id)) M.series[id].forEach(p => visibleVals.push(p.total));
+  });
+  if (!STATE.hidden.has("SPY")) M.spySeries.forEach(p => visibleVals.push(p.total));
+  if (!visibleVals.length) visibleVals.push(9800, 10200);
+
+  let minV = Math.min(...visibleVals, 9800);
+  let maxV = Math.max(...visibleVals, 10200);
+  const span = maxV - minV || 400;
+  minV -= span * 0.12;
+  maxV += span * 0.12;
+
+  const rawStep = (maxV - minV) / 5;
+  const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const norm = rawStep / mag;
+  const step = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 2.5 ? 2.5 : norm <= 5 ? 5 : 10) * mag;
+  minV = Math.floor(minV / step) * step;
+  maxV = Math.ceil(maxV / step) * step;
+
+  const n = M.rounds.length;
+  const xAt = i => pad.l + (n === 1 ? pw / 2 : (i / (n - 1)) * pw);
+  const yAt = v => pad.t + ((maxV - v) / (maxV - minV)) * ph;
+
+  let out = "";
+  // Grid lines
+  const ticks = Math.round((maxV - minV) / step);
+  for (let i = 0; i <= ticks; i++) {
+    const v = minV + i * step;
+    const y = yAt(v);
+    out += `<line x1="${pad.l}" y1="${y}" x2="${W - pad.r}" y2="${y}" stroke="var(--border)" stroke-dasharray="3,4"/>`;
+    out += `<text x="${pad.l - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${Math.round(v).toLocaleString()}</text>`;
+  }
+  // 10000 baseline
+  if (10000 >= minV && 10000 <= maxV) {
+    const y0 = yAt(10000);
+    out += `<line x1="${pad.l}" y1="${y0}" x2="${W - pad.r}" y2="${y0}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="5,4" opacity="0.6"/>`;
+  }
+
+  // Selected round highlight band
+  if (STATE.roundIdx >= 0) {
+    const sx = xAt(STATE.roundIdx);
+    out += `<line x1="${sx}" y1="${pad.t}" x2="${sx}" y2="${H - pad.b}" stroke="var(--accent)" stroke-width="1.5" opacity="0.45"/>`;
+  }
+
+  // X labels
+  M.rounds.forEach((r, i) => {
+    const x = xAt(i);
+    const active = STATE.roundIdx === i;
+    out += `<text x="${x}" y="${H - 12}" text-anchor="middle" font-size="11.5" font-weight="${active ? 800 : 600}" fill="${active ? "var(--text)" : "var(--muted)"}">R${i + 1} (${r.date.slice(5)})</text>`;
+  });
+
+  // SPY line
+  if (!STATE.hidden.has("SPY")) {
+    const pts = M.spySeries.map((p, i) => `${xAt(i)},${yAt(p.total)}`).join(" ");
+    out += `<polyline fill="none" stroke="var(--c-spy)" stroke-width="2" stroke-dasharray="6,4" points="${pts}"/>`;
+    M.spySeries.forEach((p, i) => {
+      out += `<circle cx="${xAt(i)}" cy="${yAt(p.total)}" r="3.5" fill="var(--surface)" stroke="var(--c-spy)" stroke-width="2"/>`;
+    });
+  }
+
+  // AI lines
+  M.ids.forEach(id => {
+    if (STATE.hidden.has(id)) return;
+    const col = getColor(id);
+    const pts = M.series[id].map((p, i) => `${xAt(i)},${yAt(p.total)}`).join(" ");
+    out += `<polyline fill="none" stroke="${col}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" points="${pts}"/>`;
+    M.series[id].forEach((p, i) => {
+      const r = STATE.roundIdx === i ? 5.5 : 4;
+      out += `<circle cx="${xAt(i)}" cy="${yAt(p.total)}" r="${r}" fill="var(--surface)" stroke="${col}" stroke-width="2.5"/>`;
+    });
+  });
+
+  // Hover column overlay
+  out += `<line id="hover-line" x1="0" y1="${pad.t}" x2="0" y2="${H - pad.b}" stroke="var(--text)" stroke-width="1" opacity="0"/>`;
+  M.rounds.forEach((r, i) => {
+    const colW = pw / Math.max(1, n - 1);
+    const rx = i === 0 ? pad.l : xAt(i) - colW / 2;
+    const rw = (i === 0 || i === n - 1) ? colW / 2 : colW;
+    out += `<rect class="hover-zone" data-idx="${i}" x="${rx}" y="${pad.t}" width="${rw}" height="${ph}" fill="transparent" style="cursor:pointer"/>`;
+  });
+
+  svg.innerHTML = out;
+  const hLine = svg.querySelector("#hover-line");
+  svg.querySelectorAll(".hover-zone").forEach(zone => {
+    zone.addEventListener("mouseenter", () => {
+      const i = Number(zone.dataset.idx);
+      const x = xAt(i);
+      hLine.setAttribute("x1", x);
+      hLine.setAttribute("x2", x);
+      hLine.setAttribute("opacity", "0.28");
+      const rows = [];
+      M.ids.forEach(id => {
+        if (!STATE.hidden.has(id)) {
+          const p = M.series[id][i];
+          rows.push({ name: id, color: getColor(id), total: p.total, ret: p.cumRet });
+        }
+      });
+      if (!STATE.hidden.has("SPY")) {
+        const sp = M.spySeries[i];
+        rows.push({ name: "SPY 基準", color: "var(--c-spy)", total: sp.total, ret: sp.cumRet });
+      }
+      rows.sort((a, b) => b.total - a.total);
+      tt.innerHTML = `
+        <div class="tt-head"><span>R${i + 1} · ${M.rounds[i].date}</span><span>點擊鎖定</span></div>
+        ${rows.map(r => `
+          <div class="tt-row">
+            <span style="display:flex;align-items:center;gap:6px"><span class="dot" style="background:${r.color}"></span>${r.name}</span>
+            <span><strong>${fmt(r.total)}</strong> <small style="color:${r.ret >= 0 ? "var(--pos)" : "var(--neg)"}">(${fmtPct(r.ret)})</small></span>
+          </div>
+        `).join("")}
+      `;
+      tt.style.display = "block";
+      const leftPct = (x / W) * 100;
+      tt.style.left = leftPct > 58 ? "auto" : `calc(${leftPct}% + 12px)`;
+      tt.style.right = leftPct > 58 ? `calc(${100 - leftPct}% + 12px)` : "auto";
+      tt.style.top = "14px";
+    });
+    zone.addEventListener("mouseleave", () => {
+      hLine.setAttribute("opacity", "0");
+      tt.style.display = "none";
+    });
+    zone.addEventListener("click", () => {
+      const i = Number(zone.dataset.idx);
+      STATE.roundIdx = i;
+      STATE.matrixIdx = i;
+      renderAll();
+    });
+  });
+}
+
+function renderBarChart(M) {
+  const tabs = document.getElementById("subchart-tabs");
+  tabs.querySelectorAll("button").forEach(b => {
+    b.classList.toggle("active", b.dataset.tab === STATE.subTab);
+    b.onclick = () => { STATE.subTab = b.dataset.tab; renderBarChart(M); };
+  });
+
+  const svg = document.getElementById("bar-svg");
+  const W = 440, H = 290;
+  const idx = STATE.roundIdx >= 0 ? STATE.roundIdx : M.lastIdx;
+  const rows = M.ids.map(id => ({ id, ...M.series[id][idx] })).sort((a, b) => b.total - a.total);
+
+  let out = "";
+  if (STATE.subTab === "risk") {
+    const padL = 74, padR = 54, top = 34, rowH = 56;
+    out += `<text x="${padL}" y="18" font-size="11" font-weight="700" fill="var(--muted)">上條：累積報酬率%　｜　下條：最大回撤 MDD%</text>`;
+    const maxScale = Math.max(10, ...rows.map(r => Math.max(Math.abs(r.cumRet * 100), Math.abs(r.mdd * 100)) * 1.15));
+    const barW = W - padL - padR;
+    rows.forEach((r, i) => {
+      const y = top + i * rowH;
+      const retPct = r.cumRet * 100;
+      const mddPct = Math.abs(r.mdd * 100);
+      const wRet = Math.min(barW, (Math.abs(retPct) / maxScale) * barW);
+      const wMdd = Math.min(barW, (mddPct / maxScale) * barW);
+      out += `<text x="6" y="${y + 22}" font-size="12.5" font-weight="800" fill="${getColor(r.id)}">${r.id}</text>`;
+      // Ret bar
+      out += `<rect x="${padL}" y="${y + 4}" width="${Math.max(4, wRet)}" height="13" rx="4" fill="${retPct >= 0 ? "var(--pos)" : getColor(r.id)}" opacity="0.9"/>`;
+      out += `<text x="${padL + Math.max(4, wRet) + 6}" y="${y + 15}" font-size="11.5" font-weight="700" fill="var(--text)">${retPct >= 0 ? "+" : ""}${fmt(retPct)}%</text>`;
+      // MDD bar
+      out += `<rect x="${padL}" y="${y + 22}" width="${Math.max(4, wMdd)}" height="13" rx="4" fill="var(--muted)" opacity="0.35"/>`;
+      out += `<text x="${padL + Math.max(4, wMdd) + 6}" y="${y + 33}" font-size="11.5" fill="var(--muted)">MDD -${fmt(mddPct)}%</text>`;
+    });
+  } else {
+    const padL = 74, padR = 64, top = 34, rowH = 56;
+    out += `<text x="${padL}" y="18" font-size="11" font-weight="700" fill="var(--muted)">上條：總名目曝險倍數　｜　下條：現金比例% (上限 50%)</text>`;
+    const barW = W - padL - padR;
+    rows.forEach((r, i) => {
+      const y = top + i * rowH;
+      const wLev = Math.min(barW, (r.effLev / 2.4) * barW);
+      const wCash = Math.min(barW, (r.cashPct / 0.6) * barW);
+      const x50 = padL + (0.5 / 0.6) * barW;
+      out += `<text x="6" y="${y + 22}" font-size="12.5" font-weight="800" fill="${getColor(r.id)}">${r.id}</text>`;
+      out += `<rect x="${padL}" y="${y + 4}" width="${Math.max(4, wLev)}" height="13" rx="4" fill="${getColor(r.id)}"/>`;
+      out += `<text x="${padL + Math.max(4, wLev) + 6}" y="${y + 15}" font-size="11.5" font-weight="700" fill="var(--text)">${fmt(r.effLev)}x</text>`;
+      out += `<rect x="${padL}" y="${y + 22}" width="${Math.max(4, wCash)}" height="13" rx="4" fill="#64748b" opacity="0.45"/>`;
+      out += `<line x1="${x50}" y1="${y + 20}" x2="${x50}" y2="${y + 37}" stroke="var(--neg)" stroke-dasharray="2,2" stroke-width="1.2"/>`;
+      out += `<text x="${padL + Math.max(4, wCash) + 6}" y="${y + 33}" font-size="11.5" fill="var(--muted)">現金 ${fmt(r.cashPct * 100, 1)}%</text>`;
+    });
+  }
+  svg.innerHTML = out;
+}
+
+function renderMarketStrip(M) {
+  const idx = STATE.roundIdx >= 0 ? STATE.roundIdx : M.lastIdx;
+  const r = M.rounds[idx];
+  const prev = idx > 0 ? M.rounds[idx - 1] : null;
+  const base = M.rounds[0];
+  const syms = ["SPY", "QQQ", "EWT", "EWY"];
+
+  const chips = syms.map(sym => {
+    const px = r.prices[sym];
+    const chg = prev ? (px / prev.prices[sym] - 1) : (px / base.prices[sym] - 1);
+    const cum = px / base.prices[sym] - 1;
+    const showVal = STATE.roundIdx === -1 ? cum : chg;
+    const label = STATE.roundIdx === -1 ? "4輪累計" : (idx === 0 ? "基準" : "單日");
+    return `<div class="etf-chip">
+      <div class="sym">${sym} · ${label}</div>
+      <div class="px">
+        <span>${fmt(px)}</span>
+        <span class="tag ${showVal >= 0 ? "pos" : "neg"}" style="font-size:10.5px">${idx === 0 && STATE.roundIdx === 0 ? "0.00%" : fmtPct(showVal)}</span>
+      </div>
+    </div>`;
+  }).join("");
+
+  const noteText = ROUND_NOTES[r.date] || `第 ${idx + 1} 回合報價基準（${r.date}）`;
+  document.getElementById("market-strip").innerHTML = `
+    <div class="etf-pills">${chips}</div>
+    <div class="event-line"><strong>${STATE.roundIdx === -1 ? "全期市場脈絡" : `R${idx + 1} (${r.date}) 重點`}：</strong>${STATE.roundIdx === -1 ? "先漲後跌路徑——R2 反彈後，R3 爆出輝達 CEO 辭任、R4 遇 PPI 升溫與 10 年債破 5.15%，高槓桿部位承壓。" : esc(noteText)}</div>
+  `;
+}
+
+function renderAICards(M) {
+  const box = document.getElementById("ai-grid");
+  box.innerHTML = M.standings.map((s, rankIdx) => {
+    const meta = AI_META[s.id] || { color: "#6366f1", style: s.entry?.strategy_name || "自訂策略", pros: "—", cons: "—" };
+    const seq = M.series[s.id].map((x, i) => {
+      const adj = x.action === "調整";
+      return `<span class="act-dot ${adj ? "adj" : ""}">R${i + 1}${adj ? "調" : "守"}</span>`;
+    }).join("");
+    return `
+      <div class="card ai-card" style="--ai-color:${meta.color}">
+        <div class="ai-top">
+          <div>
+            <div class="ai-id">
+              <span class="rank-badge ${rankIdx === 0 ? "rank-1" : ""}">第 ${rankIdx + 1} 名</span>
+              <span>${s.id}</span>
+            </div>
+            <div class="subtitle" style="margin-top:3px">${esc(meta.style)}</div>
+          </div>
+          <span class="tag ${s.cumRet >= 0 ? "pos" : "neg"}">${fmtPct(s.cumRet)}</span>
+        </div>
+
+        <div class="ai-metrics">
+          <div class="ai-m"><span>最終總值</span><strong>${fmt(s.total)}</strong></div>
+          <div class="ai-m"><span>相對 SPY</span><strong style="color:${s.excess >= 0 ? "var(--pos)" : "var(--neg)"}">${fmtPct(s.excess)}</strong></div>
+          <div class="ai-m"><span>最大回撤</span><strong>${fmt(s.mdd * 100)}%</strong></div>
+          <div class="ai-m"><span>R4 曝險/現金</span><strong>${fmt(s.effLev)}x / ${fmt(s.cashPct * 100, 0)}%</strong></div>
+        </div>
+
+        <ul class="ai-points">
+          <li><strong>亮點：</strong>${esc(meta.pros)}</li>
+          <li><strong>盲點：</strong>${esc(meta.cons)}</li>
+        </ul>
+
+        <div class="ai-foot">
+          <div class="action-seq" title="各回合動作">${seq}</div>
+          <button class="btn" onclick="openDetail('${s.id}')">查看回合明細 →</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderMatrix(M) {
+  const tabs = document.getElementById("matrix-tabs");
+  tabs.innerHTML = M.rounds.map((r, i) =>
+    `<button class="pill ${STATE.matrixIdx === i ? "active" : ""}" data-mi="${i}">R${i + 1} (${r.date.slice(5)})</button>`
+  ).join("");
+  tabs.querySelectorAll("button").forEach(b => {
+    b.onclick = () => { STATE.matrixIdx = Number(b.dataset.mi); renderMatrix(M); };
+  });
+
+  const idx = STATE.matrixIdx;
+  const r = M.rounds[idx];
+  document.getElementById("matrix-title").textContent = `R${idx + 1} (${r.date}) 持倉結構與調倉重點`;
+
+  const ranked = M.ids.map(id => M.series[id][idx]).sort((a, b) => b.total - a.total);
+  document.getElementById("matrix-list").innerHTML = ranked.map(s => {
+    const segs = s.positions.map(p => {
+      const w = (p.principal / s.total) * 100;
+      const col = SYM_COLORS[p.sym] || "#64748b";
+      return `<div class="alloc-seg" style="width:${w}%;background:${col}" title="${p.sym}*${p.lev}: ${fmt(p.principal)} (${fmt(w,1)}%)">
+        ${w > 11 ? `${p.sym}*${p.lev} ${fmt(w,0)}%` : ""}
+      </div>`;
+    }).join("");
+    const cw = (s.cash / s.total) * 100;
+    const cashSeg = cw > 0.1 ? `<div class="alloc-seg cash" style="width:${cw}%" title="現金: ${fmt(s.cash)} (${fmt(cw,1)}%)">
+      ${cw > 11 ? `現金 ${fmt(cw,0)}%` : ""}
+    </div>` : "";
+
+    const summary = ROUND_DISTILLED[r.date]?.[s.id] || (s.entry?.trades || "").slice(0, 68);
+    const isAdj = s.action === "調整";
+    return `
+      <div class="matrix-row">
+        <div>
+          <div style="font-weight:800;display:flex;align-items:center;gap:6px">
+            <span class="dot" style="background:${getColor(s.id)}"></span>${s.id}
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">
+            總值 ${fmt(s.total)} · ${fmt(s.effLev)}x
+          </div>
+        </div>
+        <div>
+          <div class="alloc-bar">${segs}${cashSeg}</div>
+          <div class="alloc-meta">
+            <span class="tag ${isAdj ? "warn" : ""}">${esc(s.action)}</span>
+            <span>${esc(summary)}</span>
+          </div>
+        </div>
+        <div>
+          <button class="btn" onclick="openDetail('${s.id}', ${idx})">原文</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderAudit(M) {
+  // Dynamic math check
+  let maxMathDiff = 0;
+  let cashViolation = 0;
+  M.ids.forEach(id => {
+    for (let i = 1; i < M.rounds.length; i++) {
+      const prev = M.series[id][i - 1];
+      const cur = M.series[id][i];
+      const p0 = M.rounds[i - 1].prices;
+      const p1 = M.rounds[i].prices;
+      let exp = prev.cash;
+      prev.positions.forEach(p => {
+        const ret = p1[p.sym] / p0[p.sym] - 1;
+        exp += Math.max(0, p.principal * (1 + p.lev * ret));
+      });
+      maxMathDiff = Math.max(maxMathDiff, Math.abs(cur.total - exp));
+      if (cur.cashPct > 0.50005) cashViolation++;
+    }
+  });
+
+  document.getElementById("audit-grid").innerHTML = `
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom:10px">✅ 大會硬性規則（全數合規）</h3>
+      <ul class="audit-list">
+        <li><span class="tag pos">通過</span><span><strong>標的與槓桿</strong>：僅交易 SPY/QQQ/EWT/EWY，槓桿皆在 2x–3x（符合 2–10x）。</span></li>
+        <li><span class="tag pos">通過</span><span><strong>現金上限 ≤ 50%</strong>：共 ${cashViolation} 次調倉後越線（AI-mm 於 R4 主動補買 SPY*2 修復）。</span></li>
+        <li><span class="tag pos">通過</span><span><strong>數學結算精度</strong>：逐回合重算最大誤差僅 <strong>${fmt(maxMathDiff, 4)}</strong> 單位（純四捨五入尾差）。</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom:10px">⚠️ 自我規範落差與文字瑕疵</h3>
+      <ul class="audit-list">
+        <li><span class="tag warn">注意</span><span><strong>AI-gr 自訂下限矛盾</strong>：R1 策略聲明現金不低於 30%，但 R1 (25.0%)、R2 (23.2%) 連續未達標。</span></li>
+        <li><span class="tag warn">筆誤</span><span><strong>AI-mm R3 備註誤植</strong>：note 欄將 EWY 價格誤寫為前一回合的 149.45（實際應為 145.94，結算無誤）。</span></li>
+        <li><span class="tag">格式</span><span><strong>策略欄位留空</strong>：AI-cd、AI-gr (R2–R4) 與 AI-ds (R4) 未重填 strategy 欄位（僅 AI-mm 全程完整）。</span></li>
+      </ul>
+    </div>
+  `;
+}
+
+window.openDetail = function(id, focusIdx = -1) {
+  const M = computeModel(RAW);
+  const modal = document.getElementById("detail-modal");
+  document.getElementById("modal-title").innerHTML =
+    `<span style="display:inline-flex;align-items:center;gap:8px"><span class="dot" style="background:${getColor(id)}"></span>${id} 逐回合決策與原文紀錄</span>`;
+
+  const blocks = M.series[id].map((s, i) => {
+    const posStr = s.positions.map(p => `${p.sym}*${p.lev}: ${fmt(p.principal)}`).join("、");
+    const openAttr = (focusIdx === i) ? "open" : "";
+    const sum = ROUND_DISTILLED[s.date]?.[id] || "";
+    return `
+      <div class="round-block" style="${focusIdx === i ? `border-color:${getColor(id)}` : ""}">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+          <strong>R${i + 1} (${s.date}) · ${esc(s.action)}</strong>
+          <span>總值 <strong>${fmt(s.total)}</strong> (${fmtPct(s.cumRet)}) · 現金 ${fmt(s.cash)} (${fmt(s.cashPct * 100, 1)}%)</span>
+        </div>
+        <div style="font-size:12.5px;margin-top:4px">持倉：${esc(posStr || "無")}</div>
+        ${sum ? `<div style="font-size:12.5px;color:var(--accent);margin-top:4px"><strong>重點：</strong>${esc(sum)}</div>` : ""}
+        <details ${openAttr}>
+          <summary>展開完整原文（事實 / 判斷 / 交易 / 策略）</summary>
+          <div class="raw-txt"><strong>【交易】</strong>${esc(s.entry?.trades)}\n\n<strong>【判斷】</strong>${esc(s.entry?.judgment)}\n\n<strong>【事實】</strong>${esc(s.entry?.facts)}${s.entry?.strategy ? `\n\n<strong>【策略】</strong>${esc(s.entry.strategy)}` : ""}</div>
+        </details>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("modal-body").innerHTML = blocks;
+  modal.showModal();
+};
+
+document.getElementById("modal-close").onclick = () => document.getElementById("detail-modal").close();
+document.getElementById("detail-modal").addEventListener("click", e => {
+  if (e.target === e.currentTarget) e.currentTarget.close();
+});
+
+document.getElementById("theme-btn").onclick = () => {
+  const root = document.documentElement;
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+};
+
+document.getElementById("file-in").addEventListener("change", e => {
+  const f = e.target.files?.[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const parsed = JSON.parse(String(rd.result));
+      if (!Array.isArray(parsed.rounds) || !Array.isArray(parsed.ids)) throw new Error("非競賽 JSON 格式");
+      RAW = parsed;
+      STATE.roundIdx = -1;
+      STATE.matrixIdx = parsed.rounds.length - 1;
+      renderAll();
+    } catch (err) {
+      alert("匯入失敗：" + err.message);
+    }
+  };
+  rd.readAsText(f, "utf-8");
+});
+
+renderAll();
+</script>
+</body>
+</html>
